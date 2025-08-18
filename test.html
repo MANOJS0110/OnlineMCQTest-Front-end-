@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Full-Stack Development Quiz</title>
+    <link rel="icon" href="img/mcq.2.jpg" />
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f9;
+      }
+      h1 {
+        text-align: center;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: url("img/background-image.jpg") no-repeat center center
+          fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Align to the left side */
+        padding-left: 50px; /* Add padding to keep some space from the left edge */
+      }
+      .question {
+        background-color: #ffffff6f;
+        border: 1px solid #ccc;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 5px;
+        display: none;
+      }
+      .question h2 {
+        margin: 0;
+      }
+      .options {
+        list-style-type: none;
+        padding: 0;
+      }
+      .options li {
+        margin: 10px 0;
+      }
+      .navigation-buttons {
+        text-align: rightcorner;
+      }
+      .submit-btn {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .submit-btn:hover {
+        background-color: #45a049;
+      }
+      .navigation-buttons button {
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .navigation-buttons button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Full-Stack Development Quiz</h1>
+
+    <form action="#" method="post">
+      <!-- Question 1 -->
+      <div class="question" id="q1">
+        <h2>
+          1. Which of the following is typically used as a front-end language?
+        </h2>
+        <ul class="options">
+          <li><input type="radio" name="q1" value="A" /> A) JavaScript</li>
+          <li><input type="radio" name="q1" value="B" /> B) Python</li>
+          <li><input type="radio" name="q1" value="C" /> C) Java</li>
+          <li><input type="radio" name="q1" value="D" /> D) Ruby</li>
+        </ul>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="question" id="q2">
+        <h2>
+          2. What is the main role of the back-end in full-stack development?
+        </h2>
+        <ul class="options">
+          <li>
+            <input type="radio" name="q2" value="A" /> A) To manage user
+            interfaces
+          </li>
+          <li>
+            <input type="radio" name="q2" value="B" /> B) To handle data
+            processing, storage, and server-side logic
+          </li>
+          <li>
+            <input type="radio" name="q2" value="C" /> C) To style the website
+          </li>
+          <li>
+            <input type="radio" name="q2" value="D" /> D) To provide responsive
+            designs
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="question" id="q3">
+        <h2>3. Which of the following is a popular JavaScript framework?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q3" value="A" /> A) Angular</li>
+          <li><input type="radio" name="q3" value="B" /> B) Django</li>
+          <li><input type="radio" name="q3" value="C" /> C) Flask</li>
+          <li><input type="radio" name="q3" value="D" /> D) Ruby on Rails</li>
+        </ul>
+      </div>
+
+      <!-- Question 4 -->
+      <div class="question" id="q4">
+        <h2>4. Which database is known as a NoSQL database?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q4" value="A" /> A) MySQL</li>
+          <li><input type="radio" name="q4" value="B" /> B) PostgreSQL</li>
+          <li><input type="radio" name="q4" value="C" /> C) MongoDB</li>
+          <li><input type="radio" name="q4" value="D" /> D) Oracle</li>
+        </ul>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="question" id="q5">
+        <h2>5. Which of the following is the main purpose of an API?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q5" value="A" /> A) To store data</li>
+          <li>
+            <input type="radio" name="q5" value="B" /> B) To provide a user
+            interface
+          </li>
+          <li>
+            <input type="radio" name="q5" value="C" /> C) To allow different
+            software systems to communicate
+          </li>
+          <li><input type="radio" name="q5" value="D" /> D) To manage users</li>
+        </ul>
+      </div>
+
+      <!-- Question 6 -->
+      <div class="question" id="q6">
+        <h2>6. What does REST stand for in the context of web services?</h2>
+        <ul class="options">
+          <li>
+            <input type="radio" name="q6" value="A" /> A) Representational State
+            Transfer
+          </li>
+          <li>
+            <input type="radio" name="q6" value="B" /> B) Remote Execution State
+            Transfer
+          </li>
+          <li>
+            <input type="radio" name="q6" value="C" /> C) Real-time Server
+            Transaction
+          </li>
+          <li>
+            <input type="radio" name="q6" value="D" /> D) Remote State
+            Transaction
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 7 -->
+      <div class="question" id="q7">
+        <h2>7. Which of the following is a CSS framework?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q7" value="A" /> A) React</li>
+          <li><input type="radio" name="q7" value="B" /> B) Angular</li>
+          <li><input type="radio" name="q7" value="C" /> C) Bootstrap</li>
+          <li><input type="radio" name="q7" value="D" /> D) Node.js</li>
+        </ul>
+      </div>
+
+      <!-- Question 8 -->
+      <div class="question" id="q8">
+        <h2>8. What is Node.js primarily used for?</h2>
+        <ul class="options">
+          <li>
+            <input type="radio" name="q8" value="A" /> A) Front-end development
+          </li>
+          <li>
+            <input type="radio" name="q8" value="B" /> B) Back-end development
+          </li>
+          <li>
+            <input type="radio" name="q8" value="C" /> C) Database management
+          </li>
+          <li><input type="radio" name="q8" value="D" /> D) Web design</li>
+        </ul>
+      </div>
+
+      <!-- Question 9 -->
+      <div class="question" id="q9">
+        <h2>9. Which of the following is a version control system?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q9" value="A" /> A) Git</li>
+          <li><input type="radio" name="q9" value="B" /> B) SQL</li>
+          <li><input type="radio" name="q9" value="C" /> C) React</li>
+          <li><input type="radio" name="q9" value="D" /> D) Node.js</li>
+        </ul>
+      </div>
+
+      <!-- Question 10 -->
+      <div class="question" id="q10">
+        <h2>
+          10. What does the term "responsive design" refer to in web
+          development?
+        </h2>
+        <ul class="options">
+          <li>
+            <input type="radio" name="q10" value="A" /> A) Designing websites
+            for different screen sizes
+          </li>
+          <li>
+            <input type="radio" name="q10" value="B" /> B) Using large images
+            for all screen sizes
+          </li>
+          <li>
+            <input type="radio" name="q10" value="C" /> C) Designing static
+            websites only
+          </li>
+          <li>
+            <input type="radio" name="q10" value="D" /> D) Using JavaScript for
+            all functionality
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 11 -->
+      <div class="question" id="q11">
+        <h2>11. Which HTTP method is used to retrieve data from the server?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q11" value="A" /> A) POST</li>
+          <li><input type="radio" name="q11" value="B" /> B) GET</li>
+          <li><input type="radio" name="q11" value="C" /> C) PUT</li>
+          <li><input type="radio" name="q11" value="D" /> D) DELETE</li>
+        </ul>
+      </div>
+
+      <!-- Question 12 -->
+      <div class="question" id="q12">
+        <h2>12. What does the 'npm' command do in Node.js?</h2>
+        <ul class="options">
+          <li>
+            <input type="radio" name="q12" value="A" /> A) It installs Node.js
+          </li>
+          <li>
+            <input type="radio" name="q12" value="B" /> B) It installs packages
+            from the npm registry
+          </li>
+          <li>
+            <input type="radio" name="q12" value="C" /> C) It starts the Node.js
+            server
+          </li>
+          <li>
+            <input type="radio" name="q12" value="D" /> D) It builds Node.js
+            applications
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 13 -->
+      <div class="question" id="q13">
+        <h2>13. Which of the following is used to style a webpage?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q13" value="A" /> A) HTML</li>
+          <li><input type="radio" name="q13" value="B" /> B) CSS</li>
+          <li><input type="radio" name="q13" value="C" /> C) JavaScript</li>
+          <li><input type="radio" name="q13" value="D" /> D) SQL</li>
+        </ul>
+      </div>
+
+      <!-- Question 14 -->
+      <div class="question" id="q14">
+        <h2>14. Which command is used to create a new React app?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q14" value="A" /> A) react create</li>
+          <li>
+            <input type="radio" name="q14" value="B" /> B) npx create-react-app
+          </li>
+          <li>
+            <input type="radio" name="q14" value="C" /> C) npm install react
+          </li>
+          <li>
+            <input type="radio" name="q14" value="D" /> D) create-react-app
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 15 -->
+      <div class="question" id="q15">
+        <h2>
+          15. Which of the following tools is used for bundling JavaScript
+          files?
+        </h2>
+        <ul class="options">
+          <li><input type="radio" name="q15" value="A" /> A) Webpack</li>
+          <li><input type="radio" name="q15" value="B" /> B) Babel</li>
+          <li><input type="radio" name="q15" value="C" /> C) Git</li>
+          <li><input type="radio" name="q15" value="D" /> D) npm</li>
+        </ul>
+      </div>
+
+      <!-- Question 16 -->
+      <div class="question" id="q16">
+        <h2>
+          16. What is the use of the 'console.log()' method in JavaScript?
+        </h2>
+        <ul class="options">
+          <li>
+            <input type="radio" name="q16" value="A" /> A) To display the
+            results on a web page
+          </li>
+          <li>
+            <input type="radio" name="q16" value="B" /> B) To output a message
+            to the web console
+          </li>
+          <li>
+            <input type="radio" name="q16" value="C" /> C) To output results to
+            a file
+          </li>
+          <li>
+            <input type="radio" name="q16" value="D" /> D) To stop a running
+            program
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 17 -->
+      <div class="question" id="q17">
+        <h2>
+          17. Which of the following is a command used to install Node.js
+          packages?
+        </h2>
+        <ul class="options">
+          <li><input type="radio" name="q17" value="A" /> A) node install</li>
+          <li><input type="radio" name="q17" value="B" /> B) npm install</li>
+          <li><input type="radio" name="q17" value="C" /> C) npm update</li>
+          <li><input type="radio" name="q17" value="D" /> D) install npm</li>
+        </ul>
+      </div>
+
+      <!-- Question 18 -->
+      <div class="question" id="q18">
+        <h2>
+          18. Which of the following is a server-side JavaScript runtime
+          environment?
+        </h2>
+        <ul class="options">
+          <li><input type="radio" name="q18" value="A" /> A) React</li>
+          <li><input type="radio" name="q18" value="B" /> B) Angular</li>
+          <li><input type="radio" name="q18" value="C" /> C) Node.js</li>
+          <li><input type="radio" name="q18" value="D" /> D) Vue.js</li>
+        </ul>
+      </div>
+
+      <!-- Question 19 -->
+      <div class="question" id="q19">
+        <h2>19. What does the term 'CRUD' stand for?</h2>
+        <ul class="options">
+          <li>
+            <input type="radio" name="q19" value="A" /> A) Create, Read, Update,
+            Delete
+          </li>
+          <li>
+            <input type="radio" name="q19" value="B" /> B) Control, Read,
+            Update, Delete
+          </li>
+          <li>
+            <input type="radio" name="q19" value="C" /> C) Create, Read, Use,
+            Delete
+          </li>
+          <li>
+            <input type="radio" name="q19" value="D" /> D) Control, Replace,
+            Update, Delete
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 20 -->
+      <div class="question" id="q20">
+        <h2>
+          20. Which of the following technologies is used for building REST
+          APIs?
+        </h2>
+        <ul class="options">
+          <li><input type="radio" name="q20" value="A" /> A) Express.js</li>
+          <li><input type="radio" name="q20" value="B" /> B) Flask</li>
+          <li><input type="radio" name="q20" value="C" /> C) Django</li>
+          <li>
+            <input type="radio" name="q20" value="D" /> D) All of the above
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 21 -->
+      <div class="question" id="q21">
+        <h2>21. Which of the following is NOT a JavaScript data type?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q21" value="A" /> A) Number</li>
+          <li><input type="radio" name="q21" value="B" /> B) String</li>
+          <li><input type="radio" name="q21" value="C" /> C) Boolean</li>
+          <li><input type="radio" name="q21" value="D" /> D) Character</li>
+        </ul>
+      </div>
+
+      <!-- Question 22 -->
+      <div class="question" id="q22">
+        <h2>22. What does 'MVC' stand for in full-stack development?</h2>
+        <ul class="options">
+          <li>
+            <input type="radio" name="q22" value="A" /> A) Model-View-Controller
+          </li>
+          <li>
+            <input type="radio" name="q22" value="B" /> B) Model-View-Creator
+          </li>
+          <li>
+            <input type="radio" name="q22" value="C" /> C) Monitor-View-Control
+          </li>
+          <li>
+            <input type="radio" name="q22" value="D" /> D)
+            Model-Variable-Controller
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 23 -->
+      <div class="question" id="q23">
+        <h2>23. Which of the following is used to secure APIs?</h2>
+        <ul class="options">
+          <li><input type="radio" name="q23" value="A" /> A) JWT</li>
+          <li><input type="radio" name="q23" value="B" /> B) SSL</li>
+          <li><input type="radio" name="q23" value="C" /> C) OAuth</li>
+          <li>
+            <input type="radio" name="q23" value="D" /> D) All of the above
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 24 -->
+      <div class="question" id="q24">
+        <h2>
+          24. Which of the following is a templating engine used in Node.js?
+        </h2>
+        <ul class="options">
+          <li><input type="radio" name="q24" value="A" /> A) Pug</li>
+          <li><input type="radio" name="q24" value="B" /> B) Thymeleaf</li>
+          <li><input type="radio" name="q24" value="C" /> C) EJS</li>
+          <li>
+            <input type="radio" name="q24" value="D" /> D) All of the above
+          </li>
+        </ul>
+      </div>
+
+      <!-- Question 25 -->
+      <div class="question" id="q25">
+        <h2>
+          25. Which of the following is an example of a JavaScript runtime
+          environment?
+        </h2>
+        <ul class="options">
+          <li><input type="radio" name="q25" value="A" /> A) Chrome</li>
+          <li><input type="radio" name="q25" value="B" /> B) Node.js</li>
+          <li><input type="radio" name="q25" value="C" /> C) Firefox</li>
+          <li><input type="radio" name="q25" value="D" /> D) Safari</li>
+        </ul>
+      </div>
+
+      <div class="navigation-buttons">
+        <button type="button" id="prevBtn" onclick="changeQuestion(-1)">
+          Previous
+        </button>
+        <button type="button" id="nextBtn" onclick="changeQuestion(1)">
+          Next
+        </button>
+      </div>
+
+      <button
+        class="submit-btn"
+        type="button"
+        id="submitBtn"
+        onclick="submitQuiz()"
+      >
+        Submit Quiz
+      </button>
+    </form>
+
+    <div
+      id="result"
+      style="display: none; text-align: center; margin-top: 30px"
+    >
+      <h2>Your Score: <span id="score"></span> out of 50</h2>
+      <p>You have completed the quiz. Well done!</p>
+    </div>
+
+    <script>
+      let currentQuestion = 1;
+      const totalQuestions = 25;
+      let score = 0;
+
+      // Functio to change questions
+      function changeQuestion(direction) {
+        const prevQuestion = document.getElementById("q" + currentQuestion);
+        const nextQuestion = document.getElementById(
+          "q" + (currentQuestion + direction)
+        );
+
+        if (nextQuestion) {
+          prevQuestion.style.display = "none";
+          nextQuestion.style.display = "block";
+          currentQuestion += direction;
+        }
+
+        // Show/Hide buttons based on the current question
+        if (currentQuestion === 1) {
+          document.getElementById("prevBtn").style.display = "none";
+        } else if (currentQuestion === totalQuestions) {
+          document.getElementById("nextBtn").style.display = "none";
+        } else {
+          document.getElementById("prevBtn").style.display = "inline-block";
+          document.getElementById("nextBtn").style.display = "inline-block";
+        }
+      }
+
+      // Function to submit the quiz and calculate the score
+      function submitQuiz() {
+        for (let i = 1; i <= totalQuestions; i++) {
+          const selectedAnswer = document.querySelector(
+            `input[name="q${i}"]:checked`
+          );
+          if (selectedAnswer) {
+            const correctAnswer = getCorrectAnswer(i);
+            if (selectedAnswer.value === correctAnswer) {
+              score += 2; // 2 marks for each correct answer
+            }
+          }
+        }
+
+        // Display the result
+        document.getElementById("score").textContent = score;
+        document.querySelector("form").style.display = "none";
+        document.getElementById("result").style.display = "block";
+      }
+
+      // Function to return the correct answer for a question
+      function getCorrectAnswer(questionNumber) {
+        const correctAnswers = {
+          1: "A",
+          2: "B",
+          3: "A",
+          4: "C",
+          5: "C",
+          6: "A",
+          7: "C",
+          8: "B",
+          9: "A",
+          10: "A",
+          11: "B",
+          12: "B",
+          13: "B",
+          14: "B",
+          15: "A",
+          16: "B",
+          17: "B",
+          18: "C",
+          19: "A",
+          20: "D",
+          21: "D",
+          22: "A",
+          23: "D",
+          24: "D",
+          25: "B",
+        };
+        return correctAnswers[questionNumber] || "";
+      }
+
+      // Show the first question initially
+      changeQuestion(0);
+    </script>
+  </body>
+</html>
