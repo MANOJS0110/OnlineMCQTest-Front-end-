@@ -8,7 +8,7 @@
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
   
-  <!-- CSS Design System -->
+  <!-- CSS Design System - Professional Blue & White Theme -->
   <link rel="stylesheet" href="css/styles.css" />
   
   <!-- Chart.js CDN for Analytics Visualization -->
@@ -22,7 +22,7 @@
       <div class="logo-icon">⚡</div>
       <div>
         <div class="brand-title">EduTest Analytics</div>
-        <div class="brand-tag">PRO EXAMINATION SYSTEM</div>
+        <div class="brand-tag">ACADEMIC ASSESSMENT SYSTEM</div>
       </div>
     </a>
 
@@ -34,17 +34,30 @@
   <!-- ==================== VIEW 1: AUTHENTICATION / LOGIN ==================== -->
   <section id="authView" class="view-section active">
     <div class="auth-wrapper">
-      <div class="glass-panel glass-panel-glow auth-card">
+      <div class="card-panel auth-card">
         <div class="auth-header">
-          <div style="font-size:3rem; margin-bottom:10px;">🎓</div>
-          <h2>Student Portal Login</h2>
-          <p>Enter your examination credentials to begin testing</p>
+          <div style="font-size:2.5rem; margin-bottom:6px;">🎓</div>
+          <h2>Student Examination Portal</h2>
+          <p>Sign in to access your technical assessments</p>
         </div>
+
+        <!-- Google Sign-In Button -->
+        <button class="btn btn-google" onclick="loginWithGoogle()">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          Sign in with Google
+        </button>
+
+        <div class="divider">OR ENTER DETAILS MANUALLY</div>
 
         <form id="loginForm">
           <div class="form-group">
             <label for="name">Full Name</label>
-            <input type="text" id="name" class="form-control" placeholder="e.g. Alex Johnson" required />
+            <input type="text" id="name" class="form-control" placeholder="e.g. Manoj S" required />
           </div>
 
           <div class="grid-2col">
@@ -70,11 +83,11 @@
             </div>
             <div class="form-group">
               <label for="emailId">Email Address</label>
-              <input type="email" id="emailId" class="form-control" placeholder="alex@university.edu" required />
+              <input type="email" id="emailId" class="form-control" placeholder="manoj@university.edu" required />
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem; padding:0.9rem;">
+          <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem; padding:0.85rem;">
             Proceed to Assessment Dashboard 🚀
           </button>
         </form>
@@ -84,24 +97,31 @@
 
   <!-- ==================== VIEW 2: STUDENT DASHBOARD ==================== -->
   <section id="dashboardView" class="view-section">
-    <div class="glass-panel" style="padding: 2rem; margin-bottom:1.5rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1));">
-      <h2 style="font-family:var(--font-heading); font-size:1.8rem; margin-bottom:6px;">Welcome Back to Your Assessment Center 👋</h2>
-      <p style="color:var(--text-muted);">Select an examination domain below to test your technical skills and generate diagnostic analytics.</p>
+    <div class="card-panel" style="padding: 1.75rem; margin-bottom:1.5rem; background: linear-gradient(135deg, #2563EB, #1E40AF); color:white;">
+      <div class="flex-between" style="flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h2 style="font-family:var(--font-heading); font-size:1.75rem; margin-bottom:4px;">Assessment Center 👋</h2>
+          <p style="opacity:0.9; font-size:0.95rem;">Select an examination subject domain to begin your timed test.</p>
+        </div>
+        <button class="btn btn-secondary" onclick="openEditProfileModal()" style="background:rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4);">
+          ✏️ Edit Profile Data
+        </button>
+      </div>
     </div>
 
     <!-- Quick Stats Grid -->
     <div class="stats-grid">
-      <div class="glass-panel stat-card">
+      <div class="card-panel stat-card">
         <div class="stat-icon">📊</div>
         <div class="stat-val" id="dashTotalTests">0</div>
         <div class="stat-lbl">Tests Completed</div>
       </div>
-      <div class="glass-panel stat-card">
+      <div class="card-panel stat-card">
         <div class="stat-icon">🎯</div>
         <div class="stat-val" id="dashAvgAccuracy">0%</div>
         <div class="stat-lbl">Average Accuracy</div>
       </div>
-      <div class="glass-panel stat-card">
+      <div class="card-panel stat-card">
         <div class="stat-icon">🏆</div>
         <div class="stat-val" id="dashTopScore">0 pts</div>
         <div class="stat-lbl">Highest Score</div>
@@ -110,44 +130,44 @@
 
     <div class="dashboard-grid">
       <!-- Subject Selection Panel -->
-      <div class="glass-panel" style="padding: 1.5rem;">
-        <h3 style="font-family:var(--font-heading); font-size:1.3rem; margin-bottom:0.5rem;">Select Test Domain</h3>
-        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">Choose a category to launch a timed multiple-choice test.</p>
+      <div class="card-panel" style="padding: 1.5rem;">
+        <h3 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--secondary); margin-bottom:0.4rem;">Select Test Domain</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">Choose a category to launch a timed multiple-choice assessment.</p>
 
         <div class="subject-grid">
           <div class="subject-card selected" onclick="selectSubjectCategory('fullstack', this)">
             <div class="subj-icon">💻</div>
             <h4>Full-Stack Development</h4>
-            <p>Frontend, Backend, MVC Architecture, REST APIs & JWT Security.</p>
+            <p>25 Comprehensive Questions: HTML/CSS, JS, React, Node, Express, MongoDB, REST & Security.</p>
           </div>
 
           <div class="subject-card" onclick="selectSubjectCategory('javascript', this)">
             <div class="subj-icon">⚡</div>
-            <h4>JavaScript & Modern Web</h4>
-            <p>ES6+, Async/Await, Closures, Event Loop & DOM Engine.</p>
+            <h4>JavaScript Core</h4>
+            <p>ES6+, Promises, Event Loop, Closures & Scope.</p>
           </div>
 
           <div class="subject-card" onclick="selectSubjectCategory('dsa', this)">
             <div class="subj-icon">🧩</div>
             <h4>Data Structures & Algorithms</h4>
-            <p>Arrays, Trees, Graphs, Sorting, Time Complexities & DP.</p>
+            <p>Binary Search, Trees, Graphs, Sorting & Complexity.</p>
           </div>
 
           <div class="subject-card" onclick="selectSubjectCategory('backend', this)">
             <div class="subj-icon">🗄️</div>
             <h4>Backend & Databases</h4>
-            <p>SQL, NoSQL (MongoDB), Express.js, HTTP Protocols & ACID.</p>
+            <p>NoSQL, SQL, Redis, ACID & HTTP Headers.</p>
           </div>
         </div>
 
-        <button class="btn btn-primary" onclick="startQuiz()" style="margin-top:1.5rem; width:100%; padding:1rem; font-size:1.1rem;">
+        <button class="btn btn-primary" onclick="startQuiz()" style="margin-top:1.5rem; width:100%; padding:0.95rem; font-size:1.05rem;">
           Start Examination Now ⏱️
         </button>
       </div>
 
       <!-- Recent History Sidebar -->
-      <div class="glass-panel" style="padding: 1.5rem;">
-        <h3 style="font-family:var(--font-heading); font-size:1.2rem; margin-bottom:1rem;">Recent Test History</h3>
+      <div class="card-panel" style="padding: 1.5rem;">
+        <h3 style="font-family:var(--font-heading); font-size:1.15rem; color:var(--secondary); margin-bottom:1rem;">Recent Test History</h3>
         <div id="dashHistoryList">
           <!-- Populated by app.js -->
         </div>
@@ -157,26 +177,26 @@
 
   <!-- ==================== VIEW 3: QUIZ TEST ENGINE ==================== -->
   <section id="testView" class="view-section">
-    <div class="glass-panel test-header">
+    <div class="card-panel test-header">
       <div>
-        <h3 style="font-family:var(--font-heading); font-size:1.25rem;">Live Technical Assessment</h3>
-        <p style="color:var(--text-muted); font-size:0.85rem;">Answer questions carefully. Progress auto-saves continuously.</p>
+        <h3 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--secondary);">Technical Assessment</h3>
+        <p style="color:var(--text-muted); font-size:0.85rem;">Answer all questions carefully. Progress auto-saves continuously.</p>
       </div>
 
-      <div class="flex-between gap-3">
+      <div class="flex-between" style="gap:1rem;">
         <button id="flagQuestionBtn" class="btn btn-warning" onclick="toggleFlagQuestion()">
           🏳️ Mark for Review
         </button>
         <div id="timerDisplay" class="timer-box">
-          ⏱️ 15:00
+          ⏱️ 25:00
         </div>
       </div>
     </div>
 
     <div class="quiz-layout">
       <!-- Question Container -->
-      <div class="glass-panel question-box">
-        <div class="question-meta" id="questionMeta">
+      <div class="card-panel question-box">
+        <div class="flex-between" id="questionMeta" style="margin-bottom:1rem;">
           <!-- Populated dynamically -->
         </div>
 
@@ -188,7 +208,7 @@
           <!-- Populated dynamically -->
         </div>
 
-        <div class="flex-between" style="margin-top:2rem; border-top:1px solid var(--border-subtle); padding-top:1.5rem;">
+        <div class="flex-between" style="margin-top:2rem; border-top:1px solid var(--border-color); padding-top:1.5rem;">
           <button id="prevQuestionBtn" class="btn btn-secondary" onclick="navigateQuestion(-1)">
             ⬅️ Previous
           </button>
@@ -204,16 +224,16 @@
       </div>
 
       <!-- Question Palette Sidebar -->
-      <div class="glass-panel palette-box">
-        <h4>Question Navigator</h4>
+      <div class="card-panel" style="padding:1.5rem;">
+        <h4 style="font-family:var(--font-heading); font-size:1rem; color:var(--secondary); margin-bottom:1rem;">Question Palette</h4>
         <div class="palette-grid" id="paletteGrid">
           <!-- Populated dynamically -->
         </div>
 
-        <div class="palette-legend">
-          <div class="legend-item"><div class="dot" style="background:var(--accent-green);"></div> Answered</div>
-          <div class="legend-item"><div class="dot" style="background:var(--accent-warning);"></div> Flagged for Review</div>
-          <div class="legend-item"><div class="dot" style="background:rgba(255,255,255,0.1);"></div> Unanswered</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); display:flex; flex-direction:column; gap:6px;">
+          <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; background:var(--success); border-radius:50%;"></span> Answered</div>
+          <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; background:var(--warning); border-radius:50%;"></span> Flagged for Review</div>
+          <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; background:#F1F5F9; border-radius:50%; border:1px solid #CBD5E1;"></span> Unanswered</div>
         </div>
       </div>
     </div>
@@ -221,26 +241,26 @@
 
   <!-- ==================== VIEW 4: ANALYTICS & PERFORMANCE DASHBOARD ==================== -->
   <section id="analyticsView" class="view-section">
-    <div class="glass-panel analytics-hero">
-      <h2 style="font-family:var(--font-heading); font-size:2rem; margin-bottom:8px;">Assessment Completed! 🎉</h2>
-      <p style="color:var(--text-muted);">Here is your comprehensive performance report and diagnostic analytics.</p>
+    <div class="card-panel analytics-hero">
+      <h2 style="font-family:var(--font-heading); font-size:2rem; color:var(--secondary); margin-bottom:4px;">Assessment Completed! 🎉</h2>
+      <p style="color:var(--text-muted);">Comprehensive performance analysis report</p>
       
-      <div class="score-badge" id="scoreValue">0 / 0</div>
+      <div class="score-badge" id="scoreValue">0 / 50</div>
       
       <div style="font-size:1.2rem; font-weight:700; margin-bottom:1rem;" id="gradeValue">Calculated Grade</div>
 
-      <div style="display:flex; justify-content:center; gap:2rem; flex-wrap:wrap; margin-top:1.5rem;">
+      <div style="display:flex; justify-content:center; gap:2.5rem; flex-wrap:wrap; margin-top:1.25rem;">
         <div>
           <div style="color:var(--text-muted); font-size:0.8rem; text-transform:uppercase;">Overall Accuracy</div>
-          <div style="font-size:1.5rem; font-weight:700; color:var(--accent-green);" id="accuracyValue">0%</div>
+          <div style="font-size:1.5rem; font-weight:800; color:var(--success);" id="accuracyValue">0%</div>
         </div>
         <div>
           <div style="color:var(--text-muted); font-size:0.8rem; text-transform:uppercase;">Total Time Taken</div>
-          <div style="font-size:1.5rem; font-weight:700; color:var(--accent);" id="timeValue">0m 0s</div>
+          <div style="font-size:1.5rem; font-weight:800; color:var(--primary);" id="timeValue">0m 0s</div>
         </div>
       </div>
 
-      <div style="margin-top:2rem; display:flex; justify-content:center; gap:1rem;">
+      <div style="margin-top:1.75rem; display:flex; justify-content:center; gap:1rem;">
         <button class="btn btn-primary" onclick="openCertificateModal()">
           📜 View Certificate of Completion
         </button>
@@ -252,17 +272,15 @@
 
     <!-- Analytics Chart Grids -->
     <div class="analytics-grid">
-      <!-- Accuracy Doughnut -->
-      <div class="glass-panel chart-card">
-        <h4>🎯 Answer Breakdown</h4>
+      <div class="card-panel chart-card">
+        <h4 style="font-family:var(--font-heading); font-size:1.1rem; color:var(--secondary); margin-bottom:1rem;">🎯 Answer Breakdown</h4>
         <div style="position:relative; height:240px;">
           <canvas id="accuracyDoughnutChart"></canvas>
         </div>
       </div>
 
-      <!-- Topic Performance Bar Chart -->
-      <div class="glass-panel chart-card">
-        <h4>📊 Topic Mastery Breakdown</h4>
+      <div class="card-panel chart-card">
+        <h4 style="font-family:var(--font-heading); font-size:1.1rem; color:var(--secondary); margin-bottom:1rem;">📊 Topic Mastery Breakdown</h4>
         <div style="position:relative; height:240px;">
           <canvas id="topicBarChart"></canvas>
         </div>
@@ -270,64 +288,112 @@
     </div>
 
     <div class="analytics-grid">
-      <!-- Time per Question Line Chart -->
-      <div class="glass-panel chart-card" style="grid-column: span 2;">
-        <h4>⏱️ Speed Analysis (Time Spent per Question)</h4>
+      <div class="card-panel chart-card" style="grid-column: span 2;">
+        <h4 style="font-family:var(--font-heading); font-size:1.1rem; color:var(--secondary); margin-bottom:1rem;">⏱️ Speed Analysis (Time Spent per Question)</h4>
         <div style="position:relative; height:240px;">
           <canvas id="timeLineChart"></canvas>
         </div>
       </div>
     </div>
 
-    <!-- Personalized AI Recommendations -->
-    <div class="glass-panel" style="padding:1.5rem; margin-bottom:2rem; border-left:4px solid var(--primary);">
-      <h3 style="font-family:var(--font-heading); font-size:1.2rem; margin-bottom:1rem; display:flex; align-items:center; gap:8px;">
+    <!-- Recommendations -->
+    <div class="card-panel" style="padding:1.5rem; margin-bottom:1.5rem; border-left:4px solid var(--primary);">
+      <h3 style="font-family:var(--font-heading); font-size:1.15rem; color:var(--secondary); margin-bottom:0.75rem;">
         💡 Learning Insights & Recommendations
       </h3>
-      <ul id="recommendationsList" style="padding-left:1.2rem; color:var(--text-muted);">
+      <ul id="recommendationsList" style="padding-left:1.2rem; color:var(--text-main);">
         <!-- Populated by app.js -->
       </ul>
     </div>
 
-    <!-- Question by Question Review Table -->
-    <div class="glass-panel review-table-box">
-      <h3 style="font-family:var(--font-heading); font-size:1.3rem; margin-bottom:1.5rem;">Detailed Question Review & Explanations</h3>
+    <!-- Question Review Table -->
+    <div class="card-panel" style="padding:1.5rem;">
+      <h3 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--secondary); margin-bottom:1.25rem;">Detailed Question Review & Explanations</h3>
       <div id="questionReviewContainer">
         <!-- Populated by app.js -->
       </div>
     </div>
   </section>
 
+  <!-- ==================== EDIT PROFILE DATA MODAL ==================== -->
+  <div class="modal-overlay" id="editProfileModal">
+    <div class="modal-card">
+      <div class="flex-between" style="margin-bottom:1.25rem;">
+        <h3 style="font-family:var(--font-heading); color:var(--secondary);">✏️ Edit Profile Data</h3>
+        <button class="btn btn-secondary" onclick="closeEditProfileModal()" style="padding:4px 10px;">✕</button>
+      </div>
+
+      <form id="editProfileForm">
+        <div class="form-group">
+          <label for="editName">Full Name</label>
+          <input type="text" id="editName" class="form-control" required />
+        </div>
+
+        <div class="grid-2col">
+          <div class="form-group">
+            <label for="editRegId">Registration ID</label>
+            <input type="text" id="editRegId" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="editYear">Academic Year</label>
+            <input type="number" id="editYear" class="form-control" min="1" max="5" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editClgName">College / University</label>
+          <input type="text" id="editClgName" class="form-control" required />
+        </div>
+
+        <div class="grid-2col">
+          <div class="form-group">
+            <label for="editDepartment">Department</label>
+            <input type="text" id="editDepartment" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmail">Email Address</label>
+            <input type="email" id="editEmail" class="form-control" required />
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:1rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeEditProfileModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- ==================== PRINTABLE CERTIFICATE MODAL ==================== -->
   <div class="modal-overlay" id="certificateModal">
     <div class="certificate-card">
-      <p style="text-transform:uppercase; letter-spacing:0.2em; font-size:0.8rem; font-weight:700; color:#6366f1;">Certificate of Completion</p>
-      <h2>EduTest Analytics</h2>
+      <p style="text-transform:uppercase; letter-spacing:0.15em; font-size:0.8rem; font-weight:700; color:var(--primary);">Certificate of Completion</p>
+      <h2>EduTest Analytics Board</h2>
       <p>This certificate is proudly presented to</p>
       
       <div class="certificate-name" id="certName">Student Name</div>
       
-      <p id="certDetails" style="max-width:600px; margin:0 auto 2rem auto; font-size:1.1rem; line-height:1.6;">
+      <p id="certDetails" style="max-width:600px; margin:0 auto 1.5rem auto; font-size:1.05rem; line-height:1.6;">
         Has successfully completed the assessment test with outstanding technical accuracy.
       </p>
 
-      <div class="certificate-footer">
+      <div style="display:flex; justify-content:space-between; margin-top:2.5rem; padding-top:1rem; border-top:1px solid #E2E8F0; font-size:0.85rem; color:#6B7280;">
         <div>
           <div>Date of Issuance</div>
           <strong id="certDate">2026-07-25</strong>
         </div>
         <div>
-          <div>Verification Code</div>
-          <strong>MCQ-REG-2026-VERIFIED</strong>
+          <div>Verification Status</div>
+          <strong style="color:var(--success);">OFFICIALLY VERIFIED</strong>
         </div>
         <div>
           <div>Authorized Signatory</div>
-          <strong>EduTest Board</strong>
+          <strong>EduTest Academic Board</strong>
         </div>
       </div>
 
-      <div style="margin-top:2rem; display:flex; justify-content:center; gap:1rem;" class="no-print">
-        <button class="btn btn-primary" onclick="printCertificate()">🖨️ Print / Download PDF</button>
+      <div style="margin-top:2rem; display:flex; justify-content:center; gap:1rem;">
+        <button class="btn btn-primary" onclick="printCertificate()">🖨️ Print / Download Certificate</button>
         <button class="btn btn-secondary" onclick="closeCertificateModal()">Close</button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 /**
  * Main Web Application State & Controller Logic
- * Coordinates authentication, test execution flow, timers, and view rendering.
+ * Handles Authentication (including Google Sign-In), Profile Data Editing, Quiz Flow & Timers.
  */
 
 let appState = {
@@ -13,8 +13,8 @@ let appState = {
   timeSpentPerQuestion: [],
   questionStartTime: 0,
   testTimerInterval: null,
-  timeRemainingSeconds: 900, // 15 minutes default test duration
-  totalTestDuration: 900,
+  timeRemainingSeconds: 1500, // 25 mins
+  totalTestDuration: 1500,
   testStartTime: null,
   analyticsEngine: null
 };
@@ -45,10 +45,11 @@ function updateUserNavbar() {
     badgeContainer.innerHTML = `
       <div class="avatar">${initial}</div>
       <div style="font-size:0.85rem;">
-        <div style="font-weight:700;">${escapeHtml(appState.user.name)}</div>
-        <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(appState.user.regId)}</div>
+        <div style="font-weight:700; color:var(--secondary);">${escapeHtml(appState.user.name)}</div>
+        <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(appState.user.regId)} (${escapeHtml(appState.user.department)})</div>
       </div>
-      <button class="btn btn-secondary" onclick="logout()" style="padding:4px 10px; font-size:0.75rem; margin-left:8px;">Logout</button>
+      <button class="btn btn-secondary" onclick="openEditProfileModal()" style="padding:4px 10px; font-size:0.78rem; margin-left:6px;">✏️ Edit Data</button>
+      <button class="btn btn-secondary" onclick="logout()" style="padding:4px 10px; font-size:0.78rem; margin-left:4px;">Logout</button>
     `;
     badgeContainer.style.display = "flex";
   } else if (badgeContainer) {
@@ -77,7 +78,7 @@ function showView(viewId) {
 }
 
 function setupEventListeners() {
-  // Login form submit
+  // Manual Login form submit
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
@@ -92,7 +93,7 @@ function setupEventListeners() {
       };
 
       if (!user.name || !user.regId) {
-        alert("Please provide at least Name and Registration ID.");
+        alert("Please enter at least Name and Registration ID.");
         return;
       }
 
@@ -103,6 +104,66 @@ function setupEventListeners() {
       renderDashboardStats();
     });
   }
+
+  // Edit Profile form submit
+  const editForm = document.getElementById("editProfileForm");
+  if (editForm) {
+    editForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      appState.user = {
+        name: document.getElementById("editName").value.trim(),
+        regId: document.getElementById("editRegId").value.trim(),
+        college: document.getElementById("editClgName").value.trim(),
+        year: document.getElementById("editYear").value.trim(),
+        department: document.getElementById("editDepartment").value.trim(),
+        email: document.getElementById("editEmail").value.trim()
+      };
+
+      localStorage.setItem("mcq_user", JSON.stringify(appState.user));
+      updateUserNavbar();
+      closeEditProfileModal();
+      alert("Profile data updated successfully! ✅");
+    });
+  }
+}
+
+// Interactive Google Sign-In Handler
+function loginWithGoogle() {
+  const sampleUser = {
+    name: "Manoj S",
+    regId: "2026FS01",
+    college: "Institute of Technology",
+    year: "3",
+    department: "Computer Science & Engineering",
+    email: "manoj.s@gmail.com"
+  };
+
+  appState.user = sampleUser;
+  localStorage.setItem("mcq_user", JSON.stringify(sampleUser));
+  updateUserNavbar();
+  alert("Signed in successfully with Google Account (manoj.s@gmail.com)! Welcome, Manoj S.");
+  showView("dashboardView");
+  renderDashboardStats();
+}
+
+// Data Editing Options
+function openEditProfileModal() {
+  if (!appState.user) return;
+
+  document.getElementById("editName").value = appState.user.name || "";
+  document.getElementById("editRegId").value = appState.user.regId || "";
+  document.getElementById("editYear").value = appState.user.year || "";
+  document.getElementById("editClgName").value = appState.user.college || "";
+  document.getElementById("editDepartment").value = appState.user.department || "";
+  document.getElementById("editEmail").value = appState.user.email || "";
+
+  const modal = document.getElementById("editProfileModal");
+  if (modal) modal.classList.add("active");
+}
+
+function closeEditProfileModal() {
+  const modal = document.getElementById("editProfileModal");
+  if (modal) modal.classList.remove("active");
 }
 
 function logout() {
@@ -120,7 +181,7 @@ function selectSubjectCategory(catKey, element) {
   appState.selectedCategory = catKey;
 }
 
-// Start Examination Flow
+// Start Quiz Assessment
 function startQuiz() {
   appState.currentQuestions = getQuestions(appState.selectedCategory);
   appState.currentQuestionIndex = 0;
@@ -146,14 +207,13 @@ function startTimer() {
   appState.testTimerInterval = setInterval(() => {
     appState.timeRemainingSeconds--;
     
-    // Update Question spent time
     const elapsedSec = Math.floor((Date.now() - appState.questionStartTime) / 1000);
     appState.timeSpentPerQuestion[appState.currentQuestionIndex] += elapsedSec;
     appState.questionStartTime = Date.now();
 
     if (appState.timeRemainingSeconds <= 0) {
       clearInterval(appState.testTimerInterval);
-      alert("Time is up! Submitting your examination automatically.");
+      alert("Time limit reached! Submitting your examination automatically.");
       submitQuiz();
       return;
     }
@@ -164,7 +224,7 @@ function startTimer() {
 
     if (timerBox) {
       timerBox.innerHTML = `⏱️ ${formatted}`;
-      if (appState.timeRemainingSeconds <= 120) {
+      if (appState.timeRemainingSeconds <= 180) {
         timerBox.classList.add("warning");
       } else {
         timerBox.classList.remove("warning");
@@ -186,7 +246,7 @@ function renderQuestion(index) {
   if (qMeta) {
     qMeta.innerHTML = `
       <span class="badge-tag">Question ${index + 1} of ${appState.currentQuestions.length}</span>
-      <span class="text-dim" style="font-size:0.85rem;">Topic: ${q.topic} | Difficulty: ${q.difficulty}</span>
+      <span style="font-size:0.85rem; color:var(--text-muted);">Topic: ${q.topic} | Difficulty: ${q.difficulty}</span>
     `;
   }
 
@@ -289,14 +349,12 @@ function updatePaletteHighlights() {
   });
 }
 
-// Quiz Submission & Analytics Engine Launch
 function submitQuiz() {
-  if (confirm("Are you sure you want to finish and submit your quiz now?")) {
+  if (confirm("Are you sure you want to finish and submit your assessment now?")) {
     clearInterval(appState.testTimerInterval);
 
     const totalSpentTime = appState.totalTestDuration - appState.timeRemainingSeconds;
     
-    // Create Analytics instance
     appState.analyticsEngine = new TestAnalyticsEngine(
       appState.currentQuestions,
       appState.userAnswers,
@@ -314,7 +372,6 @@ function renderAnalyticsDashboard() {
   const engine = appState.analyticsEngine;
   if (!engine) return;
 
-  // Render text summary metrics
   const scoreVal = document.getElementById("scoreValue");
   const gradeVal = document.getElementById("gradeValue");
   const accuracyVal = document.getElementById("accuracyValue");
@@ -335,19 +392,16 @@ function renderAnalyticsDashboard() {
     timeVal.textContent = `${mins}m ${secs}s`;
   }
 
-  // Render Charts
   setTimeout(() => {
     engine.renderCharts();
   }, 100);
 
-  // Render Recommendations
   const recContainer = document.getElementById("recommendationsList");
   if (recContainer) {
     const recs = engine.generateRecommendations();
-    recContainer.innerHTML = recs.map(r => `<li style="margin-bottom:8px;">${r}</li>`).join("");
+    recContainer.innerHTML = recs.map(r => `<li style="margin-bottom:6px;">${r}</li>`).join("");
   }
 
-  // Render Question Review List
   engine.renderReviewList("questionReviewContainer");
 }
 
@@ -394,14 +448,14 @@ function renderDashboardStats() {
 
     if (historyListEl) {
       historyListEl.innerHTML = history.map(h => `
-        <div style="padding:10px; border-bottom:1px solid var(--border-subtle); display:flex; justify-between; align-items:center;">
+        <div style="padding:10px 0; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <div style="font-weight:600; text-transform:capitalize;">${h.category} Test</div>
+            <div style="font-weight:700; text-transform:capitalize; color:var(--secondary);">${h.category} Test</div>
             <div style="font-size:0.75rem; color:var(--text-muted);">${h.date}</div>
           </div>
           <div style="text-align:right;">
-            <div style="font-weight:700; color:var(--primary);">${h.score}/${h.maxScore} pts</div>
-            <div style="font-size:0.75rem; color:var(--accent-green);">${h.accuracy}% Acc</div>
+            <div style="font-weight:800; color:var(--primary);">${h.score}/${h.maxScore} pts</div>
+            <div style="font-size:0.75rem; color:var(--success); font-weight:700;">${h.accuracy}% Acc</div>
           </div>
         </div>
       `).join("");
@@ -409,15 +463,14 @@ function renderDashboardStats() {
   } else {
     if (avgAccuracyEl) avgAccuracyEl.textContent = "0%";
     if (topScoreEl) topScoreEl.textContent = "0 pts";
-    if (historyListEl) historyListEl.innerHTML = "<p style='color:var(--text-muted); padding:1rem;'>No tests taken yet. Start your first quiz!</p>";
+    if (historyListEl) historyListEl.innerHTML = "<p style='color:var(--text-muted); padding:1rem 0;'>No tests taken yet. Start your assessment!</p>";
   }
 }
 
-// Certificate Modal
 function openCertificateModal() {
   const engine = appState.analyticsEngine;
   if (!engine || !appState.user) {
-    alert("Please complete a test first to view certificate.");
+    alert("Please complete a test first to view your certificate.");
     return;
   }
 
@@ -429,7 +482,7 @@ function openCertificateModal() {
   if (certName) certName.textContent = appState.user.name;
   if (certDate) certDate.textContent = new Date().toLocaleDateString();
   if (certDetails) {
-    certDetails.innerHTML = `Has successfully passed the <strong>${appState.selectedCategory.toUpperCase()}</strong> examination with a score of <strong>${engine.score}/${engine.maxScore} (${engine.accuracyPercent}%)</strong>.`;
+    certDetails.innerHTML = `Has successfully completed the <strong>${appState.selectedCategory.toUpperCase()}</strong> examination with a total score of <strong>${engine.score}/${engine.maxScore} (${engine.accuracyPercent}%)</strong>.`;
   }
 
   if (modal) modal.classList.add("active");
