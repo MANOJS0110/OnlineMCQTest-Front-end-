@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online MCQ Test & Deep Performance Analytics Platform</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+  
+  <!-- CSS Design System -->
+  <link rel="stylesheet" href="css/styles.css" />
+  
+  <!-- Chart.js CDN for Analytics Visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Sticky Navbar Header -->
+  <header class="app-navbar">
+    <a href="#" class="brand-logo" onclick="showView('dashboardView')">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="brand-title">EduTest Analytics</div>
+        <div class="brand-tag">PRO EXAMINATION SYSTEM</div>
+      </div>
+    </a>
+
+    <div class="user-badge" id="navUserBadge" style="display:none;">
+      <!-- Populated dynamically by app.js -->
+    </div>
+  </header>
+
+  <!-- ==================== VIEW 1: AUTHENTICATION / LOGIN ==================== -->
+  <section id="authView" class="view-section active">
+    <div class="auth-wrapper">
+      <div class="glass-panel glass-panel-glow auth-card">
+        <div class="auth-header">
+          <div style="font-size:3rem; margin-bottom:10px;">🎓</div>
+          <h2>Student Portal Login</h2>
+          <p>Enter your examination credentials to begin testing</p>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" class="form-control" placeholder="e.g. Alex Johnson" required />
+          </div>
+
+          <div class="grid-2col">
+            <div class="form-group">
+              <label for="regId">Registration ID</label>
+              <input type="text" id="regId" class="form-control" placeholder="e.g. 2026FS01" required />
+            </div>
+            <div class="form-group">
+              <label for="year">Academic Year</label>
+              <input type="number" id="year" class="form-control" placeholder="3" min="1" max="5" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="clgName">College / University</label>
+            <input type="text" id="clgName" class="form-control" placeholder="Institute of Technology" required />
+          </div>
+
+          <div class="grid-2col">
+            <div class="form-group">
+              <label for="department">Department</label>
+              <input type="text" id="department" class="form-control" placeholder="Computer Science" required />
+            </div>
+            <div class="form-group">
+              <label for="emailId">Email Address</label>
+              <input type="email" id="emailId" class="form-control" placeholder="alex@university.edu" required />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem; padding:0.9rem;">
+            Proceed to Assessment Dashboard 🚀
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VIEW 2: STUDENT DASHBOARD ==================== -->
+  <section id="dashboardView" class="view-section">
+    <div class="glass-panel" style="padding: 2rem; margin-bottom:1.5rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1));">
+      <h2 style="font-family:var(--font-heading); font-size:1.8rem; margin-bottom:6px;">Welcome Back to Your Assessment Center 👋</h2>
+      <p style="color:var(--text-muted);">Select an examination domain below to test your technical skills and generate diagnostic analytics.</p>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="stats-grid">
+      <div class="glass-panel stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-val" id="dashTotalTests">0</div>
+        <div class="stat-lbl">Tests Completed</div>
+      </div>
+      <div class="glass-panel stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-val" id="dashAvgAccuracy">0%</div>
+        <div class="stat-lbl">Average Accuracy</div>
+      </div>
+      <div class="glass-panel stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-val" id="dashTopScore">0 pts</div>
+        <div class="stat-lbl">Highest Score</div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Subject Selection Panel -->
+      <div class="glass-panel" style="padding: 1.5rem;">
+        <h3 style="font-family:var(--font-heading); font-size:1.3rem; margin-bottom:0.5rem;">Select Test Domain</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">Choose a category to launch a timed multiple-choice test.</p>
+
+        <div class="subject-grid">
+          <div class="subject-card selected" onclick="selectSubjectCategory('fullstack', this)">
+            <div class="subj-icon">💻</div>
+            <h4>Full-Stack Development</h4>
+            <p>Frontend, Backend, MVC Architecture, REST APIs & JWT Security.</p>
+          </div>
+
+          <div class="subject-card" onclick="selectSubjectCategory('javascript', this)">
+            <div class="subj-icon">⚡</div>
+            <h4>JavaScript & Modern Web</h4>
+            <p>ES6+, Async/Await, Closures, Event Loop & DOM Engine.</p>
+          </div>
+
+          <div class="subject-card" onclick="selectSubjectCategory('dsa', this)">
+            <div class="subj-icon">🧩</div>
+            <h4>Data Structures & Algorithms</h4>
+            <p>Arrays, Trees, Graphs, Sorting, Time Complexities & DP.</p>
+          </div>
+
+          <div class="subject-card" onclick="selectSubjectCategory('backend', this)">
+            <div class="subj-icon">🗄️</div>
+            <h4>Backend & Databases</h4>
+            <p>SQL, NoSQL (MongoDB), Express.js, HTTP Protocols & ACID.</p>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="startQuiz()" style="margin-top:1.5rem; width:100%; padding:1rem; font-size:1.1rem;">
+          Start Examination Now ⏱️
+        </button>
+      </div>
+
+      <!-- Recent History Sidebar -->
+      <div class="glass-panel" style="padding: 1.5rem;">
+        <h3 style="font-family:var(--font-heading); font-size:1.2rem; margin-bottom:1rem;">Recent Test History</h3>
+        <div id="dashHistoryList">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VIEW 3: QUIZ TEST ENGINE ==================== -->
+  <section id="testView" class="view-section">
+    <div class="glass-panel test-header">
+      <div>
+        <h3 style="font-family:var(--font-heading); font-size:1.25rem;">Live Technical Assessment</h3>
+        <p style="color:var(--text-muted); font-size:0.85rem;">Answer questions carefully. Progress auto-saves continuously.</p>
+      </div>
+
+      <div class="flex-between gap-3">
+        <button id="flagQuestionBtn" class="btn btn-warning" onclick="toggleFlagQuestion()">
+          🏳️ Mark for Review
+        </button>
+        <div id="timerDisplay" class="timer-box">
+          ⏱️ 15:00
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-layout">
+      <!-- Question Container -->
+      <div class="glass-panel question-box">
+        <div class="question-meta" id="questionMeta">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="question-text" id="questionText">
+          Loading question...
+        </div>
+
+        <div class="options-list" id="optionsList">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="flex-between" style="margin-top:2rem; border-top:1px solid var(--border-subtle); padding-top:1.5rem;">
+          <button id="prevQuestionBtn" class="btn btn-secondary" onclick="navigateQuestion(-1)">
+            ⬅️ Previous
+          </button>
+
+          <button id="nextQuestionBtn" class="btn btn-secondary" onclick="navigateQuestion(1)">
+            Next ➡️
+          </button>
+
+          <button class="btn btn-accent" onclick="submitQuiz()">
+            Submit Assessment 🏁
+          </button>
+        </div>
+      </div>
+
+      <!-- Question Palette Sidebar -->
+      <div class="glass-panel palette-box">
+        <h4>Question Navigator</h4>
+        <div class="palette-grid" id="paletteGrid">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="palette-legend">
+          <div class="legend-item"><div class="dot" style="background:var(--accent-green);"></div> Answered</div>
+          <div class="legend-item"><div class="dot" style="background:var(--accent-warning);"></div> Flagged for Review</div>
+          <div class="legend-item"><div class="dot" style="background:rgba(255,255,255,0.1);"></div> Unanswered</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VIEW 4: ANALYTICS & PERFORMANCE DASHBOARD ==================== -->
+  <section id="analyticsView" class="view-section">
+    <div class="glass-panel analytics-hero">
+      <h2 style="font-family:var(--font-heading); font-size:2rem; margin-bottom:8px;">Assessment Completed! 🎉</h2>
+      <p style="color:var(--text-muted);">Here is your comprehensive performance report and diagnostic analytics.</p>
+      
+      <div class="score-badge" id="scoreValue">0 / 0</div>
+      
+      <div style="font-size:1.2rem; font-weight:700; margin-bottom:1rem;" id="gradeValue">Calculated Grade</div>
+
+      <div style="display:flex; justify-content:center; gap:2rem; flex-wrap:wrap; margin-top:1.5rem;">
+        <div>
+          <div style="color:var(--text-muted); font-size:0.8rem; text-transform:uppercase;">Overall Accuracy</div>
+          <div style="font-size:1.5rem; font-weight:700; color:var(--accent-green);" id="accuracyValue">0%</div>
+        </div>
+        <div>
+          <div style="color:var(--text-muted); font-size:0.8rem; text-transform:uppercase;">Total Time Taken</div>
+          <div style="font-size:1.5rem; font-weight:700; color:var(--accent);" id="timeValue">0m 0s</div>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem; display:flex; justify-content:center; gap:1rem;">
+        <button class="btn btn-primary" onclick="openCertificateModal()">
+          📜 View Certificate of Completion
+        </button>
+        <button class="btn btn-secondary" onclick="showView('dashboardView')">
+          🏠 Return to Dashboard
+        </button>
+      </div>
+    </div>
+
+    <!-- Analytics Chart Grids -->
+    <div class="analytics-grid">
+      <!-- Accuracy Doughnut -->
+      <div class="glass-panel chart-card">
+        <h4>🎯 Answer Breakdown</h4>
+        <div style="position:relative; height:240px;">
+          <canvas id="accuracyDoughnutChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Topic Performance Bar Chart -->
+      <div class="glass-panel chart-card">
+        <h4>📊 Topic Mastery Breakdown</h4>
+        <div style="position:relative; height:240px;">
+          <canvas id="topicBarChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="analytics-grid">
+      <!-- Time per Question Line Chart -->
+      <div class="glass-panel chart-card" style="grid-column: span 2;">
+        <h4>⏱️ Speed Analysis (Time Spent per Question)</h4>
+        <div style="position:relative; height:240px;">
+          <canvas id="timeLineChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personalized AI Recommendations -->
+    <div class="glass-panel" style="padding:1.5rem; margin-bottom:2rem; border-left:4px solid var(--primary);">
+      <h3 style="font-family:var(--font-heading); font-size:1.2rem; margin-bottom:1rem; display:flex; align-items:center; gap:8px;">
+        💡 Learning Insights & Recommendations
+      </h3>
+      <ul id="recommendationsList" style="padding-left:1.2rem; color:var(--text-muted);">
+        <!-- Populated by app.js -->
+      </ul>
+    </div>
+
+    <!-- Question by Question Review Table -->
+    <div class="glass-panel review-table-box">
+      <h3 style="font-family:var(--font-heading); font-size:1.3rem; margin-bottom:1.5rem;">Detailed Question Review & Explanations</h3>
+      <div id="questionReviewContainer">
+        <!-- Populated by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PRINTABLE CERTIFICATE MODAL ==================== -->
+  <div class="modal-overlay" id="certificateModal">
+    <div class="certificate-card">
+      <p style="text-transform:uppercase; letter-spacing:0.2em; font-size:0.8rem; font-weight:700; color:#6366f1;">Certificate of Completion</p>
+      <h2>EduTest Analytics</h2>
+      <p>This certificate is proudly presented to</p>
+      
+      <div class="certificate-name" id="certName">Student Name</div>
+      
+      <p id="certDetails" style="max-width:600px; margin:0 auto 2rem auto; font-size:1.1rem; line-height:1.6;">
+        Has successfully completed the assessment test with outstanding technical accuracy.
+      </p>
+
+      <div class="certificate-footer">
+        <div>
+          <div>Date of Issuance</div>
+          <strong id="certDate">2026-07-25</strong>
+        </div>
+        <div>
+          <div>Verification Code</div>
+          <strong>MCQ-REG-2026-VERIFIED</strong>
+        </div>
+        <div>
+          <div>Authorized Signatory</div>
+          <strong>EduTest Board</strong>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem; display:flex; justify-content:center; gap:1rem;" class="no-print">
+        <button class="btn btn-primary" onclick="printCertificate()">🖨️ Print / Download PDF</button>
+        <button class="btn btn-secondary" onclick="closeCertificateModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/data.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

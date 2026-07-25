@@ -1,86 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>online mcq of full-stack development</title>
-    <link rel="icon" href="img/mcq.3.jpg" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: url("img/mcq.bg.jpg") no-repeat center center fixed;
-        background-size: cover;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start; /* Align to the left side */
-        padding-left: 50px; /* Add padding to keep some space from the left edge */
-      }
-
-      .login-form {
-        background-color: rgba(
-          255,
-          255,
-          255,
-          0.71
-        ); /* Semi-transparent background */
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        width: 300px;
-      }
-
-      .login-form input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-      }
-
-      .submit-btn {
-        width: 100%;
-        padding: 10px;
-        background-color: #007bff;
-        color: rgb(20, 19, 19);
-        font-size: 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 10px;
-      }
-
-      .submit-btn:hover {
-        background-color: #0056b3;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="login-form">
-      <input type="text" id="name" placeholder="Name" required />
-      <input type="number" id="regId" placeholder="Registration ID" required />
-      <input type="text" id="clgName" placeholder="College Name" required />
-      <input type="number" id="year" placeholder="Year" required />
-      <input type="text" id="department" placeholder="Department" required />
-      <input type="number" id="phoneNo" placeholder="Phone Number" required />
-      <input type="email" id="emailId" placeholder="Email ID" required />
-      <button class="submit-btn" onclick="login()">Login</button>
-    </div>
-
-    <script>
-      function login() {
-        const name = document.getElementById("name").value;
-        if (name) {
-          alert("Login Successful! Welcome, " + name);
-          // Redirect to the test page after successful login
-          window.location.href = "test.html"; // Replace 'test.html' with the correct test page URL
-        } else {
-          alert("Please fill out all fields.");
-        }
-      }
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0; url=index.html" />
+  <title>Redirecting to Online MCQ Test Portal...</title>
+  <script>
+    window.location.href = "index.html";
+  </script>
+</head>
+<body style="background:#0f172a; color:#f8fafc; font-family:sans-serif; text-align:center; padding-top:100px;">
+  <p>Redirecting to Online MCQ Examination & Performance Analytics Platform...</p>
+  <p><a href="index.html" style="color:#6366f1;">Click here if you are not redirected automatically</a></p>
+</body>
 </html>
