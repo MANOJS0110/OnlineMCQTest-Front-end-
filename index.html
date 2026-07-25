@@ -103,9 +103,14 @@
           <h2 style="font-family:var(--font-heading); font-size:1.75rem; margin-bottom:4px;">Assessment Center 👋</h2>
           <p style="opacity:0.95; font-size:0.95rem;">Select an examination subject domain to begin your timed 25-question test.</p>
         </div>
-        <button class="btn btn-secondary" onclick="openEditProfileModal()" style="background:rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4);">
-          ✏️ Edit Profile Data
-        </button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-secondary" onclick="openEditProfileModal()" style="background:rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4);">
+            ✏️ Edit Profile Data
+          </button>
+          <button class="btn btn-secondary" onclick="resetEntireDashboard()" style="background:rgba(239, 68, 68, 0.2); color:#FCA5A5; border:1px solid rgba(239, 68, 68, 0.4);">
+            🔄 Reset Dashboard
+          </button>
+        </div>
       </div>
     </div>
 
@@ -167,7 +172,10 @@
 
       <!-- Recent History Sidebar -->
       <div class="card-panel" style="padding: 1.5rem;">
-        <h3 style="font-family:var(--font-heading); font-size:1.15rem; color:var(--secondary); margin-bottom:1rem;">Recent Test History</h3>
+        <div class="flex-between" style="margin-bottom:1rem;">
+          <h3 style="font-family:var(--font-heading); font-size:1.15rem; color:var(--secondary);">Recent Test History</h3>
+          <button class="btn btn-secondary" onclick="resetEntireDashboard()" style="padding:2px 8px; font-size:0.75rem; color:var(--error);">Clear</button>
+        </div>
         <div id="dashHistoryList">
           <!-- Populated by app.js -->
         </div>
@@ -266,6 +274,9 @@
         </button>
         <button class="btn btn-secondary" onclick="showView('dashboardView')">
           🏠 Return to Dashboard
+        </button>
+        <button class="btn btn-secondary" onclick="resetEntireDashboard()" style="color:var(--error);">
+          🔄 Reset Dashboard
         </button>
       </div>
     </div>
@@ -377,7 +388,7 @@
         Has successfully completed the assessment test with outstanding technical accuracy.
       </p>
 
-      <div style="display:flex; justify-content:space-between; margin-top:2.5rem; padding-top:1rem; border-top:1px solid #E2E8F0; font-size:0.85rem; color:#64748B;">
+      <div style="display:flex; justify-content:space-between; margin-top:2.5rem; padding-top:1rem; border-top:1px solid #E2E8F0; font-size:0.85rem; color:#6B7280;">
         <div>
           <div>Date of Issuance</div>
           <strong id="certDate">2026-07-25</strong>
