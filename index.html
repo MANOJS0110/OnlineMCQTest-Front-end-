@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Online MCQ Test & Deep Performance Analytics Platform</title>
+  <title>Online MCQ Examination Portal & Analytics Dashboard</title>
   
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
@@ -21,15 +21,74 @@
     <a href="#" class="brand-logo" onclick="showView('dashboardView')">
       <div class="logo-icon">⚡</div>
       <div>
-        <div class="brand-title">EduTest Analytics</div>
-        <div class="brand-tag">ACADEMIC ASSESSMENT SYSTEM</div>
+        <div class="brand-title">EduTest Portal</div>
+        <div class="brand-tag">EXAMINATION & ANALYTICS</div>
       </div>
     </a>
 
-    <div class="user-badge" id="navUserBadge" style="display:none;">
-      <!-- Populated dynamically by app.js -->
+    <!-- Dashboard Role Switcher -->
+    <div class="role-switcher no-print">
+      <button id="roleStudentBtn" class="role-btn active" onclick="setDashboardRole('student')">👨‍🎓 Student View</button>
+      <button id="roleAdminBtn" class="role-btn" onclick="setDashboardRole('admin')">👑 Admin View</button>
+    </div>
+
+    <div class="flex-between gap-3 no-print">
+      <button class="btn btn-secondary" onclick="toggleDarkMode()" style="padding:6px 12px; font-size:0.8rem;">🌙 Theme</button>
+      <button class="btn btn-secondary" onclick="toggleNotifications()" style="padding:6px 12px; font-size:0.8rem; position:relative;">
+        🔔 Alerts
+      </button>
+
+      <div class="user-badge" id="navUserBadge" style="display:none;">
+        <!-- Populated dynamically by app.js -->
+      </div>
     </div>
   </header>
+
+  <!-- Notification Drawer -->
+  <div class="notification-panel" id="notificationPanel">
+    <h4 style="font-family:var(--font-heading); font-size:0.95rem; margin-bottom:8px; border-bottom:1px solid var(--border-color); padding-bottom:6px;">Notifications & Announcements</h4>
+    <div class="noti-item">📢 <strong>System Update:</strong> New Data Structures & Algorithms mock test suite published.</div>
+    <div class="noti-item">🏆 <strong>Leaderboard Reset:</strong> Weekly rank snapshot updated for July.</div>
+    <div class="noti-item">⚡ <strong>Performance Tip:</strong> Practice async programming to improve JS score.</div>
+  </div>
+
+  <!-- Global Filter Bar -->
+  <div class="filter-bar no-print">
+    <div class="filter-item">
+      <span>📅 Date Range:</span>
+      <select id="filterTime" class="filter-select" onchange="applyGlobalFilters()">
+        <option value="daily">Daily View</option>
+        <option value="weekly">Weekly View</option>
+        <option value="monthly" selected>Monthly View</option>
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <span>📚 Topic:</span>
+      <select id="filterTopic" class="filter-select" onchange="applyGlobalFilters()">
+        <option value="all">All Topics</option>
+        <option value="fullstack">Full Stack</option>
+        <option value="dsa">Data Structures & Alg</option>
+        <option value="backend">Backend & Database</option>
+        <option value="javascript">JavaScript Core</option>
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <span>⚡ Difficulty:</span>
+      <select id="filterDifficulty" class="filter-select">
+        <option value="all">All Levels</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+    </div>
+
+    <div style="margin-left:auto; display:flex; gap:8px;">
+      <button class="btn btn-secondary" onclick="exportPDF()" style="padding:6px 12px; font-size:0.8rem;">📄 Export PDF</button>
+      <button class="btn btn-primary" onclick="openEmailModal()" style="padding:6px 12px; font-size:0.8rem;">✉️ Email Report</button>
+    </div>
+  </div>
 
   <!-- ==================== VIEW 1: AUTHENTICATION / LOGIN ==================== -->
   <section id="authView" class="view-section active">
@@ -41,7 +100,6 @@
           <p>Sign in to access your 100-question assessment suite</p>
         </div>
 
-        <!-- Google Sign-In Button -->
         <button class="btn btn-google" onclick="loginWithGoogle()">
           <svg width="18" height="18" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -95,81 +153,413 @@
     </div>
   </section>
 
-  <!-- ==================== VIEW 2: STUDENT DASHBOARD ==================== -->
+  <!-- ==================== VIEW 2: DASHBOARD MAIN CONTAINER ==================== -->
   <section id="dashboardView" class="view-section">
-    <div class="card-panel" style="padding: 1.75rem; margin-bottom:1.5rem; background: linear-gradient(135deg, #2563EB, #1E3A8A); color:white;">
-      <div class="flex-between" style="flex-wrap:wrap; gap:1rem;">
-        <div>
-          <h2 style="font-family:var(--font-heading); font-size:1.75rem; margin-bottom:4px;">Assessment Center 👋</h2>
-          <p style="opacity:0.95; font-size:0.95rem;">Select an examination subject domain to begin your timed 25-question test.</p>
+    
+    <!-- SECTION 2A: ADMIN OVERALL DASHBOARD VIEW -->
+    <div id="adminDashboardContent" style="display:none;">
+      <div class="card-panel" style="padding:1.75rem; margin-bottom:1.5rem; background: linear-gradient(135deg, #1E3A8A, #2563EB); color:white;">
+        <h2 style="font-family:var(--font-heading); font-size:1.75rem; margin-bottom:4px;">👑 Platform Admin Dashboard</h2>
+        <p style="opacity:0.95; font-size:0.95rem;">Overall examination platform performance metrics, global test activity, and user rankings.</p>
+      </div>
+
+      <!-- Admin Summary Cards (9 Cards) -->
+      <div class="summary-cards-grid">
+        <div class="summary-card">
+          <div class="card-icon">👥</div>
+          <div class="card-value">1,248</div>
+          <div class="card-label">Total Users</div>
         </div>
-        <button class="btn btn-secondary" onclick="openEditProfileModal()" style="background:rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4);">
-          ✏️ Edit Profile Data
-        </button>
+        <div class="summary-card">
+          <div class="card-icon">⚡</div>
+          <div class="card-value">892</div>
+          <div class="card-label">Active Users</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">📝</div>
+          <div class="card-value">4,520</div>
+          <div class="card-label">Tests Conducted</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">❓</div>
+          <div class="card-value">100</div>
+          <div class="card-label">Total Questions</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">🎯</div>
+          <div class="card-value">76.4%</div>
+          <div class="card-label">Platform Accuracy</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">✅</div>
+          <div class="card-value">92.1%</div>
+          <div class="card-label">Completion Rate</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">🏆</div>
+          <div class="card-value">50 / 50</div>
+          <div class="card-label">Highest Score</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">📉</div>
+          <div class="card-value">12 / 50</div>
+          <div class="card-label">Lowest Score</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">📜</div>
+          <div class="card-value">612</div>
+          <div class="card-label">Certificates Issued</div>
+        </div>
+      </div>
+
+      <!-- Admin Charts Grid (4 Charts) -->
+      <div class="charts-grid-2col">
+        <div class="card-panel chart-card">
+          <h4>
+            <span>📈 Test Attempts Over Time</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Line Chart</span>
+          </h4>
+          <div style="position:relative; height:240px;">
+            <canvas id="adminAttemptsChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card-panel chart-card">
+          <h4>
+            <span>📊 Topic-wise Accuracy</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Bar Chart</span>
+          </h4>
+          <div style="position:relative; height:240px;">
+            <canvas id="adminTopicAccuracyChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-grid-2col">
+        <div class="card-panel chart-card">
+          <h4>
+            <span>🍕 Topic Popularity (Attempts)</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Pie Chart</span>
+          </h4>
+          <div style="position:relative; height:240px;">
+            <canvas id="adminTopicPopularityChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card-panel chart-card">
+          <h4>
+            <span>📊 Average Scores by Topic</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Horizontal Bar</span>
+          </h4>
+          <div style="position:relative; height:240px;">
+            <canvas id="adminAvgScoresChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Platform Statistics -->
+      <div class="card-panel" style="padding:1.5rem; margin-bottom:1.75rem; background:linear-gradient(135deg, #EFF6FF, #F8FAFC);">
+        <h3 style="font-family:var(--font-heading); font-size:1.2rem; color:var(--secondary); margin-bottom:1rem;">📌 Platform Diagnostic Statistics</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; font-size:0.9rem;">
+          <div>🔥 <strong>Most Attempted:</strong> Full Stack (1,420 attempts)</div>
+          <div>⚠️ <strong>Hardest Topic:</strong> JavaScript Core (65% Avg Acc)</div>
+          <div>🌟 <strong>Easiest Topic:</strong> Backend & Database (90% Avg Acc)</div>
+          <div>⏱️ <strong>Avg Time / Question:</strong> 38 Seconds</div>
+          <div>🔢 <strong>Total Attempted:</strong> 113,000 Questions</div>
+          <div>✅ <strong>Total Correct:</strong> 86,332 Answers</div>
+          <div>❌ <strong>Total Wrong:</strong> 26,668 Answers</div>
+        </div>
+      </div>
+
+      <!-- Leaderboard Table Section -->
+      <div class="card-panel" style="padding:1.5rem; margin-bottom:1.75rem;">
+        <div class="flex-between" style="margin-bottom:1rem; flex-wrap:wrap; gap:10px;">
+          <h3 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--secondary);">🏆 Platform Leaderboard</h3>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="searchLeaderboard" class="filter-select" placeholder="🔍 Search student or topic..." onkeyup="renderLeaderboardTable()" style="width:220px;" />
+            <button class="btn btn-secondary" onclick="sortLeaderboard('accuracy')" style="padding:6px 12px; font-size:0.8rem;">Sort by Accuracy</button>
+            <button class="btn btn-secondary" onclick="sortLeaderboard('highest')" style="padding:6px 12px; font-size:0.8rem;">Sort by High Score</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Student Name</th>
+                <th>Tests Attended</th>
+                <th>Avg Score</th>
+                <th>Accuracy</th>
+                <th>Best Topic</th>
+                <th>Highest Score</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardTableBody">
+              <!-- Populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Test Activity Table -->
+      <div class="card-panel" style="padding:1.5rem;">
+        <h3 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--secondary); margin-bottom:1rem;">⚡ Recent Test Activity</h3>
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Topic</th>
+                <th>Score</th>
+                <th>Percentage</th>
+                <th>Date</th>
+                <th>Time Taken</th>
+              </tr>
+            </thead>
+            <tbody id="recentActivityTableBody">
+              <!-- Populated by app.js -->
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <!-- Quick Stats Grid -->
-    <div class="stats-grid">
-      <div class="card-panel stat-card">
-        <div class="stat-icon">📊</div>
-        <div class="stat-val" id="dashTotalTests">0</div>
-        <div class="stat-lbl">Tests Completed</div>
-      </div>
-      <div class="card-panel stat-card">
-        <div class="stat-icon">🎯</div>
-        <div class="stat-val" id="dashAvgAccuracy">0%</div>
-        <div class="stat-lbl">Average Accuracy</div>
-      </div>
-      <div class="card-panel stat-card">
-        <div class="stat-icon">🏆</div>
-        <div class="stat-val" id="dashTopScore">0 pts</div>
-        <div class="stat-lbl">Highest Score</div>
-      </div>
-    </div>
-
-    <div class="dashboard-grid">
-      <!-- Subject Selection Panel -->
-      <div class="card-panel" style="padding: 1.5rem;">
-        <h3 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--secondary); margin-bottom:0.4rem;">Select Test Domain</h3>
-        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">All subjects contain 25 full questions with detailed explanations.</p>
-
-        <div class="subject-grid">
-          <div class="subject-card selected" onclick="selectSubjectCategory('fullstack', this)">
-            <div class="subj-icon">💻</div>
-            <h4>Full-Stack Development</h4>
-            <p>25 Questions: HTML/CSS, JS, React, Node, Express, MongoDB, REST & Security.</p>
+    <!-- SECTION 2B: INDIVIDUAL STUDENT DASHBOARD VIEW -->
+    <div id="studentDashboardContent">
+      <div class="card-panel" style="padding:1.75rem; margin-bottom:1.5rem; background: linear-gradient(135deg, #2563EB, #1E3A8A); color:white;">
+        <div class="flex-between" style="flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h2 style="font-family:var(--font-heading); font-size:1.75rem; margin-bottom:4px;">👨‍🎓 Student Performance Center</h2>
+            <p style="opacity:0.95; font-size:0.95rem;">Track your personalized test scores, skill progress, and learning achievements.</p>
           </div>
+          <button class="btn btn-secondary" onclick="startQuiz()" style="background:white; color:var(--primary); font-weight:800;">
+            🚀 Take New Assessment
+          </button>
+        </div>
+      </div>
 
-          <div class="subject-card" onclick="selectSubjectCategory('javascript', this)">
-            <div class="subj-icon">⚡</div>
-            <h4>JavaScript Core</h4>
-            <p>25 Questions: ES6+, Promises, Event Loop, Closures, DOM, Debouncing & Generators.</p>
-          </div>
+      <!-- Student Summary Cards (11 Cards) -->
+      <div class="summary-cards-grid">
+        <div class="summary-card">
+          <div class="card-icon">📝</div>
+          <div class="card-value">28</div>
+          <div class="card-label">Tests Attended</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">✅</div>
+          <div class="card-value">26</div>
+          <div class="card-label">Tests Completed</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">📊</div>
+          <div class="card-value">81.5%</div>
+          <div class="card-label">Avg Percentage</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">🎯</div>
+          <div class="card-value">84.2%</div>
+          <div class="card-label">Overall Accuracy</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">🏆</div>
+          <div class="card-value">48 / 50</div>
+          <div class="card-label">Best Score</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">🏅</div>
+          <div class="card-value">#4</div>
+          <div class="card-label">Current Rank</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">❓</div>
+          <div class="card-value">650</div>
+          <div class="card-label">Questions Solved</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">🟢</div>
+          <div class="card-value">547</div>
+          <div class="card-label">Correct Answers</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">🔴</div>
+          <div class="card-value">103</div>
+          <div class="card-label">Wrong Answers</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">⚪</div>
+          <div class="card-value">0</div>
+          <div class="card-label">Unanswered</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-icon">⏱️</div>
+          <div class="card-value">38s</div>
+          <div class="card-label">Avg Time / Q</div>
+        </div>
+      </div>
 
-          <div class="subject-card" onclick="selectSubjectCategory('dsa', this)">
-            <div class="subj-icon">🧩</div>
-            <h4>Data Structures & Algorithms</h4>
-            <p>25 Questions: Binary Search, BST, Graphs, DP, Sorting, Heaps, KMP & Tries.</p>
-          </div>
-
-          <div class="subject-card" onclick="selectSubjectCategory('backend', this)">
-            <div class="subj-icon">🗄️</div>
-            <h4>Backend & Databases</h4>
-            <p>25 Questions: NoSQL, SQL, Redis, ACID, Indexing, WebSockets & Microservices.</p>
+      <!-- Student Charts Grid (Progression Line, Skill Radar, Accuracy Doughnut) -->
+      <div class="charts-grid-2col">
+        <div class="card-panel chart-card">
+          <h4>📈 Score Progression Across Tests</h4>
+          <div style="position:relative; height:240px;">
+            <canvas id="userProgressionChart"></canvas>
           </div>
         </div>
 
-        <button class="btn btn-primary" onclick="startQuiz()" style="margin-top:1.5rem; width:100%; padding:0.95rem; font-size:1.05rem;">
-          Start Assessment (25 Questions) ⏱️
-        </button>
+        <div class="card-panel chart-card">
+          <h4>🕸️ Skill Competency Radar</h4>
+          <div style="position:relative; height:240px;">
+            <canvas id="userSkillRadarChart"></canvas>
+          </div>
+        </div>
       </div>
 
-      <!-- Recent History Sidebar -->
-      <div class="card-panel" style="padding: 1.5rem;">
-        <h3 style="font-family:var(--font-heading); font-size:1.15rem; color:var(--secondary); margin-bottom:1rem;">Recent Test History</h3>
-        <div id="dashHistoryList">
-          <!-- Populated by app.js -->
+      <div class="charts-grid-2col">
+        <div class="card-panel chart-card">
+          <h4>🎯 Overall Accuracy Breakdown</h4>
+          <div style="position:relative; height:240px;">
+            <canvas id="userAccuracyDoughnutChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 30-Day Activity Heatmap Calendar -->
+        <div class="card-panel heatmap-box">
+          <h4 style="font-family:var(--font-heading); font-size:1.1rem; color:var(--secondary);">📅 30-Day Learning Activity Heatmap</h4>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Daily assessment activity matrix over the past month.</p>
+          <div class="heatmap-grid" id="heatmapCalendarGrid">
+            <!-- Populated by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Skill Progress Section -->
+      <div class="card-panel skill-progress-box">
+        <h3 style="font-family:var(--font-heading); font-size:1.2rem; color:var(--secondary); margin-bottom:1rem;">📊 Skill Mastery Progress</h3>
+        
+        <div class="skill-item">
+          <div class="skill-header">
+            <span>💻 Full Stack Development</span>
+            <span style="color:var(--primary);">82%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 82%;"></div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span>🧩 Data Structures & Algorithms</span>
+            <span style="color:var(--primary);">70%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 70%;"></div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span>🗄️ Backend & Database</span>
+            <span style="color:var(--primary);">90%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 90%;"></div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span>⚡ JavaScript & Modern Web</span>
+            <span style="color:var(--primary);">65%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 65%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Achievement Badges -->
+      <div style="margin-bottom:1.75rem;">
+        <h3 style="font-family:var(--font-heading); font-size:1.2rem; color:var(--secondary); margin-bottom:1rem;">🏆 Earned Achievement Badges</h3>
+        <div class="achievements-grid">
+          <div class="achievement-card">
+            <div class="achievement-icon">🏆</div>
+            <div class="achievement-title">First Test Completed</div>
+            <div class="achievement-desc">Successfully submitted your first mock test.</div>
+          </div>
+          <div class="achievement-card">
+            <div class="achievement-icon">🔥</div>
+            <div class="achievement-title">7-Day Learning Streak</div>
+            <div class="achievement-desc">Completed assessments 7 days in a row.</div>
+          </div>
+          <div class="achievement-card">
+            <div class="achievement-icon">🎯</div>
+            <div class="achievement-title">100% Accuracy</div>
+            <div class="achievement-desc">Scored full marks in Backend & Database.</div>
+          </div>
+          <div class="achievement-card">
+            <div class="achievement-icon">⭐</div>
+            <div class="achievement-title">Top Performer</div>
+            <div class="achievement-desc">Ranked in the top 5 platform leaderboard.</div>
+          </div>
+          <div class="achievement-card">
+            <div class="achievement-icon">🚀</div>
+            <div class="achievement-title">Fast Learner</div>
+            <div class="achievement-desc">Average solving speed faster than 40s/Q.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI-Style Performance Insights -->
+      <div class="card-panel" style="padding:1.5rem; margin-bottom:1.75rem; border-left:4px solid var(--primary);">
+        <h3 style="font-family:var(--font-heading); font-size:1.15rem; color:var(--secondary); margin-bottom:0.75rem;">
+          🤖 AI Diagnostic Insights
+        </h3>
+        <ul style="padding-left:1.2rem; color:var(--text-main); line-height:1.8;">
+          <li>Your strongest topic domain is <strong>Backend & Database (90% accuracy)</strong>.</li>
+          <li>Focus recommendation: Improve <strong>JavaScript Core</strong> by practicing asynchronous execution and closures.</li>
+          <li>Overall test accuracy has increased by <strong>+12%</strong> over the past 30 days.</li>
+          <li>You solve DSA problem sets <strong>15% faster</strong> than the platform average.</li>
+          <li>You have completed <strong>35 tests</strong> this month. Keep up the high streak!</li>
+        </ul>
+      </div>
+
+      <!-- Recent Tests List -->
+      <div class="dashboard-grid">
+        <div class="card-panel" style="padding: 1.5rem;">
+          <h3 style="font-family:var(--font-heading); font-size:1.2rem; color:var(--secondary); margin-bottom:1rem;">Select Subject Test Domain</h3>
+          <div class="subject-grid">
+            <div class="subject-card selected" onclick="selectSubjectCategory('fullstack', this)">
+              <div class="subj-icon">💻</div>
+              <h4>Full Stack Development</h4>
+              <p>25 Questions</p>
+            </div>
+            <div class="subject-card" onclick="selectSubjectCategory('javascript', this)">
+              <div class="subj-icon">⚡</div>
+              <h4>JavaScript Core</h4>
+              <p>25 Questions</p>
+            </div>
+            <div class="subject-card" onclick="selectSubjectCategory('dsa', this)">
+              <div class="subj-icon">🧩</div>
+              <h4>Data Structures & Alg</h4>
+              <p>25 Questions</p>
+            </div>
+            <div class="subject-card" onclick="selectSubjectCategory('backend', this)">
+              <div class="subj-icon">🗄️</div>
+              <h4>Backend & Database</h4>
+              <p>25 Questions</p>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="startQuiz()" style="margin-top:1.25rem; width:100%;">
+            Start 25-Question Test ⏱️
+          </button>
+        </div>
+
+        <div class="card-panel" style="padding: 1.5rem;">
+          <h3 style="font-family:var(--font-heading); font-size:1.15rem; color:var(--secondary); margin-bottom:1rem;">Recent Session History</h3>
+          <div id="studentHistoryList">
+            <!-- Populated by app.js -->
+          </div>
         </div>
       </div>
     </div>
@@ -194,7 +584,6 @@
     </div>
 
     <div class="quiz-layout">
-      <!-- Question Container -->
       <div class="card-panel question-box">
         <div class="flex-between" id="questionMeta" style="margin-bottom:1rem;">
           <!-- Populated dynamically -->
@@ -212,18 +601,15 @@
           <button id="prevQuestionBtn" class="btn btn-secondary" onclick="navigateQuestion(-1)">
             ⬅️ Previous
           </button>
-
           <button id="nextQuestionBtn" class="btn btn-secondary" onclick="navigateQuestion(1)">
             Next ➡️
           </button>
-
           <button class="btn btn-accent" onclick="submitQuiz()">
             Submit Assessment 🏁
           </button>
         </div>
       </div>
 
-      <!-- Question Palette Sidebar -->
       <div class="card-panel" style="padding:1.5rem;">
         <h4 style="font-family:var(--font-heading); font-size:1rem; color:var(--secondary); margin-bottom:1rem;">Question Palette</h4>
         <div class="palette-grid" id="paletteGrid">
@@ -239,7 +625,7 @@
     </div>
   </section>
 
-  <!-- ==================== VIEW 4: ANALYTICS & PERFORMANCE DASHBOARD ==================== -->
+  <!-- ==================== VIEW 4: TEST RESULT ANALYTICS ==================== -->
   <section id="analyticsView" class="view-section">
     <div class="card-panel analytics-hero">
       <h2 style="font-family:var(--font-heading); font-size:2rem; color:var(--secondary); margin-bottom:4px;">Assessment Completed! 🎉</h2>
@@ -270,43 +656,7 @@
       </div>
     </div>
 
-    <!-- Analytics Chart Grids -->
-    <div class="analytics-grid">
-      <div class="card-panel chart-card">
-        <h4 style="font-family:var(--font-heading); font-size:1.1rem; color:var(--secondary); margin-bottom:1rem;">🎯 Answer Breakdown</h4>
-        <div style="position:relative; height:240px;">
-          <canvas id="accuracyDoughnutChart"></canvas>
-        </div>
-      </div>
-
-      <div class="card-panel chart-card">
-        <h4 style="font-family:var(--font-heading); font-size:1.1rem; color:var(--secondary); margin-bottom:1rem;">📊 Topic Mastery Breakdown</h4>
-        <div style="position:relative; height:240px;">
-          <canvas id="topicBarChart"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <div class="analytics-grid">
-      <div class="card-panel chart-card" style="grid-column: span 2;">
-        <h4 style="font-family:var(--font-heading); font-size:1.1rem; color:var(--secondary); margin-bottom:1rem;">⏱️ Speed Analysis (Time Spent per Question)</h4>
-        <div style="position:relative; height:240px;">
-          <canvas id="timeLineChart"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recommendations -->
-    <div class="card-panel" style="padding:1.5rem; margin-bottom:1.5rem; border-left:4px solid var(--primary);">
-      <h3 style="font-family:var(--font-heading); font-size:1.15rem; color:var(--secondary); margin-bottom:0.75rem;">
-        💡 Learning Insights & Recommendations
-      </h3>
-      <ul id="recommendationsList" style="padding-left:1.2rem; color:var(--text-main);">
-        <!-- Populated by app.js -->
-      </ul>
-    </div>
-
-    <!-- Question Review Table -->
+    <!-- Detailed Review List -->
     <div class="card-panel" style="padding:1.5rem;">
       <h3 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--secondary); margin-bottom:1.25rem;">Detailed Question Review & Explanations</h3>
       <div id="questionReviewContainer">
@@ -314,6 +664,27 @@
       </div>
     </div>
   </section>
+
+  <!-- ==================== EMAIL REPORT MODAL ==================== -->
+  <div class="modal-overlay" id="emailReportModal">
+    <div class="modal-card">
+      <div class="flex-between" style="margin-bottom:1rem;">
+        <h3 style="font-family:var(--font-heading); color:var(--secondary);">✉️ Email Performance Report</h3>
+        <button class="btn btn-secondary" onclick="closeEmailModal()" style="padding:4px 10px;">✕</button>
+      </div>
+
+      <form onsubmit="sendEmailReport(event)">
+        <div class="form-group">
+          <label for="emailReportInput">Recipient Email Address</label>
+          <input type="email" id="emailReportInput" class="form-control" placeholder="student@university.edu" required />
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn btn-secondary" onclick="closeEmailModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Send Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- ==================== EDIT PROFILE DATA MODAL ==================== -->
   <div class="modal-overlay" id="editProfileModal">
@@ -373,7 +744,7 @@
       
       <div class="certificate-name" id="certName">Student Name</div>
       
-      <p id="certDetails" style="max-width:600px; margin:0 auto 1.5rem auto; font-size:1.05rem; line-height:1.6;">
+      <p style="max-width:600px; margin:0 auto 1.5rem auto; font-size:1.05rem; line-height:1.6;">
         Has successfully completed the assessment test with outstanding technical accuracy.
       </p>
 
@@ -392,7 +763,7 @@
         </div>
       </div>
 
-      <div style="margin-top:2rem; display:flex; justify-content:center; gap:1rem;">
+      <div style="margin-top:2rem; display:flex; justify-content:center; gap:1rem;" class="no-print">
         <button class="btn btn-primary" onclick="printCertificate()">🖨️ Print / Download Certificate</button>
         <button class="btn btn-secondary" onclick="closeCertificateModal()">Close</button>
       </div>
