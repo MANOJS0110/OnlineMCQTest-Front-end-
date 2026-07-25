@@ -1,6 +1,6 @@
 /**
  * Main Web Application State & Controller Logic
- * Handles Authentication (including Google Sign-In), Profile Data Editing, Dashboard Reset, Quiz Flow & Timers.
+ * Handles Authentication (including Google Sign-In), Profile Data Editing, Quiz Flow & Timers.
  */
 
 let appState = {
@@ -49,7 +49,6 @@ function updateUserNavbar() {
         <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(appState.user.regId)} (${escapeHtml(appState.user.department)})</div>
       </div>
       <button class="btn btn-secondary" onclick="openEditProfileModal()" style="padding:4px 10px; font-size:0.78rem; margin-left:6px;">✏️ Edit Data</button>
-      <button class="btn btn-secondary" onclick="resetEntireDashboard()" style="padding:4px 10px; font-size:0.78rem; margin-left:4px; color:var(--error);">🔄 Reset</button>
       <button class="btn btn-secondary" onclick="logout()" style="padding:4px 10px; font-size:0.78rem; margin-left:4px;">Logout</button>
     `;
     badgeContainer.style.display = "flex";
@@ -125,29 +124,6 @@ function setupEventListeners() {
       closeEditProfileModal();
       alert("Profile data updated successfully! ✅");
     });
-  }
-}
-
-// Reset Entire Dashboard Feature
-function resetEntireDashboard() {
-  if (confirm("Are you sure you want to reset the entire dashboard? This will clear all saved test performance metrics, history, and create a fresh clean dashboard.")) {
-    clearInterval(appState.testTimerInterval);
-    
-    // Clear localStorage test history
-    localStorage.removeItem("mcq_history");
-    
-    // Reset app state
-    appState.userAnswers = {};
-    appState.flaggedQuestions = new Set();
-    appState.analyticsEngine = null;
-    appState.currentQuestions = [];
-    appState.currentQuestionIndex = 0;
-
-    // Refresh UI stats
-    renderDashboardStats();
-    showView("dashboardView");
-    
-    alert("Dashboard reset successfully! Starting fresh with a new dashboard. 🔄✨");
   }
 }
 
@@ -485,7 +461,6 @@ function renderDashboardStats() {
       `).join("");
     }
   } else {
-    if (avgAccuracyEl) avgAccuracyEl.textContent = "0";
     if (avgAccuracyEl) avgAccuracyEl.textContent = "0%";
     if (topScoreEl) topScoreEl.textContent = "0 pts";
     if (historyListEl) historyListEl.innerHTML = "<p style='color:var(--text-muted); padding:1rem 0;'>No tests taken yet. Start your assessment!</p>";
