@@ -1,11 +1,10 @@
 /**
- * Application Controller & Main State Manager
- * Coordinates Role Switching (Admin vs Student), Global Filters, Leaderboard Sorting, Heatmap Calendar, and Quiz Flow.
+ * Main Web Application State & Controller Logic
+ * Handles Authentication (including Google Sign-In), Profile Data Editing, Quiz Flow & Timers.
  */
 
 let appState = {
   user: null,
-  role: 'student', // 'admin' or 'student'
   selectedCategory: "fullstack",
   currentQuestions: [],
   currentQuestionIndex: 0,
@@ -16,25 +15,11 @@ let appState = {
   testTimerInterval: null,
   timeRemainingSeconds: 1500, // 25 mins
   totalTestDuration: 1500,
-  adminAnalytics: null,
-  studentAnalytics: null,
-  leaderboardData: [
-    { rank: 1, name: "Alex Johnson", tests: 42, avgScore: 48.5, accuracy: 97, topic: "Backend & Database", highest: 50 },
-    { rank: 2, name: "Sarah Smith", tests: 38, avgScore: 46.2, accuracy: 92, topic: "Full Stack", highest: 50 },
-    { rank: 3, name: "Manoj S", tests: 35, avgScore: 45.0, accuracy: 90, topic: "Backend & Database", highest: 48 },
-    { rank: 4, name: "David Miller", tests: 31, avgScore: 43.8, accuracy: 88, topic: "Data Structures & Alg", highest: 48 },
-    { rank: 5, name: "Emily Davis", tests: 29, avgScore: 42.1, accuracy: 84, topic: "JavaScript Core", highest: 46 },
-    { rank: 6, name: "Michael Brown", tests: 27, avgScore: 40.5, accuracy: 81, topic: "Full Stack", highest: 46 },
-    { rank: 7, name: "Jessica Taylor", tests: 24, avgScore: 39.0, accuracy: 78, topic: "Data Structures & Alg", highest: 44 }
-  ],
-  recentActivity: [
-    { name: "Manoj S", topic: "Full Stack", score: "48/50", percent: "96%", date: "2026-07-25 18:30", time: "18m 42s" },
-    { name: "Sarah Smith", topic: "Backend & Database", score: "50/50", percent: "100%", date: "2026-07-25 17:15", time: "16m 10s" },
-    { name: "Alex Johnson", topic: "Data Structures & Alg", score: "46/50", percent: "92%", date: "2026-07-25 16:00", time: "21m 05s" },
-    { name: "David Miller", topic: "JavaScript Core", score: "44/50", percent: "88%", date: "2026-07-25 14:20", time: "19m 50s" }
-  ]
+  testStartTime: null,
+  analyticsEngine: null
 };
 
+// Initialize App on DOM Load
 document.addEventListener("DOMContentLoaded", () => {
   loadSavedUser();
   setupEventListeners();
@@ -60,11 +45,11 @@ function updateUserNavbar() {
     badgeContainer.innerHTML = `
       <div class="avatar">${initial}</div>
       <div style="font-size:0.85rem;">
-        <div style="font-weight:800; color:var(--secondary);">${escapeHtml(appState.user.name)}</div>
-        <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(appState.user.regId)}</div>
+        <div style="font-weight:700; color:var(--secondary);">${escapeHtml(appState.user.name)}</div>
+        <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(appState.user.regId)} (${escapeHtml(appState.user.department)})</div>
       </div>
-      <button class="btn btn-secondary" onclick="openEditProfileModal()" style="padding:4px 10px; font-size:0.75rem; margin-left:4px;">✏️ Edit Data</button>
-      <button class="btn btn-secondary" onclick="logout()" style="padding:4px 10px; font-size:0.75rem; margin-left:4px;">Logout</button>
+      <button class="btn btn-secondary" onclick="openEditProfileModal()" style="padding:4px 10px; font-size:0.78rem; margin-left:6px;">✏️ Edit Data</button>
+      <button class="btn btn-secondary" onclick="logout()" style="padding:4px 10px; font-size:0.78rem; margin-left:4px;">Logout</button>
     `;
     badgeContainer.style.display = "flex";
   } else if (badgeContainer) {
@@ -77,42 +62,14 @@ function checkAuthAndRender() {
     showView("authView");
   } else {
     showView("dashboardView");
-    renderDashboardByRole();
-  }
-}
-
-function setDashboardRole(role) {
-  appState.role = role;
-  document.getElementById("roleAdminBtn")?.classList.toggle("active", role === 'admin');
-  document.getElementById("roleStudentBtn")?.classList.toggle("active", role === 'student');
-  renderDashboardByRole();
-}
-
-function renderDashboardByRole() {
-  const adminSec = document.getElementById("adminDashboardContent");
-  const studentSec = document.getElementById("studentDashboardContent");
-
-  if (appState.role === 'admin') {
-    if (adminSec) adminSec.style.display = "block";
-    if (studentSec) studentSec.style.display = "none";
-    
-    appState.adminAnalytics = new AdminAnalyticsEngine();
-    appState.adminAnalytics.renderAdminCharts('daily');
-    renderLeaderboardTable();
-    renderRecentActivityTable();
-  } else {
-    if (adminSec) adminSec.style.display = "none";
-    if (studentSec) studentSec.style.display = "block";
-    
-    appState.studentAnalytics = new UserDashboardAnalyticsEngine();
-    appState.studentAnalytics.renderStudentCharts();
-    renderHeatmapCalendar();
-    renderUserDashboardStats();
+    renderDashboardStats();
   }
 }
 
 function showView(viewId) {
-  document.querySelectorAll(".view-section").forEach(sec => sec.classList.remove("active"));
+  document.querySelectorAll(".view-section").forEach(sec => {
+    sec.classList.remove("active");
+  });
   const target = document.getElementById(viewId);
   if (target) {
     target.classList.add("active");
@@ -121,7 +78,7 @@ function showView(viewId) {
 }
 
 function setupEventListeners() {
-  // Login form submit
+  // Manual Login form submit
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
@@ -135,11 +92,16 @@ function setupEventListeners() {
         email: document.getElementById("emailId").value.trim()
       };
 
+      if (!user.name || !user.regId) {
+        alert("Please enter at least Name and Registration ID.");
+        return;
+      }
+
       appState.user = user;
       localStorage.setItem("mcq_user", JSON.stringify(user));
       updateUserNavbar();
       showView("dashboardView");
-      renderDashboardByRole();
+      renderDashboardStats();
     });
   }
 
@@ -160,11 +122,12 @@ function setupEventListeners() {
       localStorage.setItem("mcq_user", JSON.stringify(appState.user));
       updateUserNavbar();
       closeEditProfileModal();
-      alert("Profile updated successfully!");
+      alert("Profile data updated successfully! ✅");
     });
   }
 }
 
+// Interactive Google Sign-In Handler
 function loginWithGoogle() {
   const sampleUser = {
     name: "Manoj S",
@@ -178,142 +141,15 @@ function loginWithGoogle() {
   appState.user = sampleUser;
   localStorage.setItem("mcq_user", JSON.stringify(sampleUser));
   updateUserNavbar();
+  alert("Signed in successfully with Google Account (manoj.s@gmail.com)! Welcome, Manoj S.");
   showView("dashboardView");
-  renderDashboardByRole();
+  renderDashboardStats();
 }
 
-// Filter Apply
-function applyGlobalFilters() {
-  const filterTopic = document.getElementById("filterTopic")?.value;
-  const filterTime = document.getElementById("filterTime")?.value;
-
-  if (appState.role === 'admin' && appState.adminAnalytics) {
-    appState.adminAnalytics.renderAdminCharts(filterTime || 'daily');
-  }
-}
-
-// Admin Tables
-function renderLeaderboardTable() {
-  const container = document.getElementById("leaderboardTableBody");
-  if (!container) return;
-
-  const searchQuery = document.getElementById("searchLeaderboard")?.value.toLowerCase() || "";
-  const filtered = appState.leaderboardData.filter(item => 
-    item.name.toLowerCase().includes(searchQuery) || item.topic.toLowerCase().includes(searchQuery)
-  );
-
-  container.innerHTML = filtered.map(item => `
-    <tr>
-      <td><strong>#${item.rank}</strong></td>
-      <td><strong>${escapeHtml(item.name)}</strong></td>
-      <td>${item.tests}</td>
-      <td><span class="badge badge-primary">${item.avgScore} / 50</span></td>
-      <td><span class="badge badge-success">${item.accuracy}%</span></td>
-      <td>${escapeHtml(item.topic)}</td>
-      <td><strong>${item.highest} pts</strong></td>
-    </tr>
-  `).join("");
-}
-
-function sortLeaderboard(key) {
-  appState.leaderboardData.sort((a, b) => (b[key] || 0) - (a[key] || 0));
-  renderLeaderboardTable();
-}
-
-function renderRecentActivityTable() {
-  const container = document.getElementById("recentActivityTableBody");
-  if (!container) return;
-
-  container.innerHTML = appState.recentActivity.map(act => `
-    <tr>
-      <td><strong>${escapeHtml(act.name)}</strong></td>
-      <td>${escapeHtml(act.topic)}</td>
-      <td><strong>${act.score}</strong></td>
-      <td><span class="badge badge-success">${act.percent}</span></td>
-      <td>${act.date}</td>
-      <td>${act.time}</td>
-    </tr>
-  `).join("");
-}
-
-// Heatmap Calendar (30 Days Grid)
-function renderHeatmapCalendar() {
-  const container = document.getElementById("heatmapCalendarGrid");
-  if (!container) return;
-
-  let html = "";
-  for (let i = 1; i <= 30; i++) {
-    const level = (i % 4) + 1; // 1-4 random levels
-    html += `<div class="heatmap-cell" data-level="${level}" title="Day ${i}: ${level * 2} tests attempted"></div>`;
-  }
-  container.innerHTML = html;
-}
-
-function renderUserDashboardStats() {
-  const historyListEl = document.getElementById("studentHistoryList");
-  if (!historyListEl) return;
-
-  let history = [];
-  const saved = localStorage.getItem("mcq_history");
-  if (saved) {
-    try { history = JSON.parse(saved); } catch (e) {}
-  }
-
-  if (history.length > 0) {
-    historyListEl.innerHTML = history.map(h => `
-      <div style="padding:10px 0; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-weight:700; text-transform:capitalize; color:var(--secondary);">${h.category} Test</div>
-          <div style="font-size:0.75rem; color:var(--text-muted);">${h.date}</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-weight:800; color:var(--primary);">${h.score}/${h.maxScore} pts</div>
-          <div style="font-size:0.75rem; color:var(--success); font-weight:700;">${h.accuracy}% Acc</div>
-        </div>
-      </div>
-    `).join("");
-  } else {
-    historyListEl.innerHTML = "<p style='color:var(--text-muted); padding:1rem 0;'>No tests taken yet. Launch your assessment!</p>";
-  }
-}
-
-// Dark Mode Toggle
-function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
-}
-
-// Email Report Modal
-function openEmailModal() {
-  const modal = document.getElementById("emailReportModal");
-  if (modal) modal.classList.add("active");
-}
-
-function closeEmailModal() {
-  const modal = document.getElementById("emailReportModal");
-  if (modal) modal.classList.remove("active");
-}
-
-function sendEmailReport(e) {
-  e.preventDefault();
-  const email = document.getElementById("emailReportInput")?.value;
-  alert(`Performance report successfully emailed to ${email}!`);
-  closeEmailModal();
-}
-
-// Export PDF / Print
-function exportPDF() {
-  window.print();
-}
-
-// Notifications Drawer Toggle
-function toggleNotifications() {
-  const panel = document.getElementById("notificationPanel");
-  if (panel) panel.classList.toggle("active");
-}
-
-// Profile Modal
+// Data Editing Options
 function openEditProfileModal() {
   if (!appState.user) return;
+
   document.getElementById("editName").value = appState.user.name || "";
   document.getElementById("editRegId").value = appState.user.regId || "";
   document.getElementById("editYear").value = appState.user.year || "";
@@ -345,7 +181,7 @@ function selectSubjectCategory(catKey, element) {
   appState.selectedCategory = catKey;
 }
 
-// Quiz Flow
+// Start Quiz Assessment
 function startQuiz() {
   appState.currentQuestions = getQuestions(appState.selectedCategory);
   appState.currentQuestionIndex = 0;
@@ -353,7 +189,7 @@ function startQuiz() {
   appState.flaggedQuestions = new Set();
   appState.timeSpentPerQuestion = new Array(appState.currentQuestions.length).fill(0);
   
-  appState.totalTestDuration = appState.currentQuestions.length * 60;
+  appState.totalTestDuration = appState.currentQuestions.length * 60; // 1 min per question
   appState.timeRemainingSeconds = appState.totalTestDuration;
   appState.testStartTime = Date.now();
   appState.questionStartTime = Date.now();
@@ -377,7 +213,7 @@ function startTimer() {
 
     if (appState.timeRemainingSeconds <= 0) {
       clearInterval(appState.testTimerInterval);
-      alert("Time limit reached! Submitting your test automatically.");
+      alert("Time limit reached! Submitting your examination automatically.");
       submitQuiz();
       return;
     }
@@ -514,24 +350,28 @@ function updatePaletteHighlights() {
 }
 
 function submitQuiz() {
-  if (confirm("Are you sure you want to submit your assessment?")) {
+  if (confirm("Are you sure you want to finish and submit your assessment now?")) {
     clearInterval(appState.testTimerInterval);
+
     const totalSpentTime = appState.totalTestDuration - appState.timeRemainingSeconds;
     
-    const quizAnalytics = new TestAnalyticsEngine(
+    appState.analyticsEngine = new TestAnalyticsEngine(
       appState.currentQuestions,
       appState.userAnswers,
       appState.timeSpentPerQuestion,
       totalSpentTime
     );
 
-    saveTestToHistory(quizAnalytics);
-    renderQuizAnalyticsView(quizAnalytics);
+    saveTestToHistory(appState.analyticsEngine);
+    renderAnalyticsDashboard();
     showView("analyticsView");
   }
 }
 
-function renderQuizAnalyticsView(engine) {
+function renderAnalyticsDashboard() {
+  const engine = appState.analyticsEngine;
+  if (!engine) return;
+
   const scoreVal = document.getElementById("scoreValue");
   const gradeVal = document.getElementById("gradeValue");
   const accuracyVal = document.getElementById("accuracyValue");
@@ -550,6 +390,16 @@ function renderQuizAnalyticsView(engine) {
     const mins = Math.floor(engine.totalTime / 60);
     const secs = engine.totalTime % 60;
     timeVal.textContent = `${mins}m ${secs}s`;
+  }
+
+  setTimeout(() => {
+    engine.renderCharts();
+  }, 100);
+
+  const recContainer = document.getElementById("recommendationsList");
+  if (recContainer) {
+    const recs = engine.generateRecommendations();
+    recContainer.innerHTML = recs.map(r => `<li style="margin-bottom:6px;">${r}</li>`).join("");
   }
 
   engine.renderReviewList("questionReviewContainer");
@@ -575,13 +425,66 @@ function saveTestToHistory(engine) {
   localStorage.setItem("mcq_history", JSON.stringify(history.slice(0, 10)));
 }
 
+function renderDashboardStats() {
+  let history = [];
+  const saved = localStorage.getItem("mcq_history");
+  if (saved) {
+    try { history = JSON.parse(saved); } catch (e) {}
+  }
+
+  const totalTestsEl = document.getElementById("dashTotalTests");
+  const avgAccuracyEl = document.getElementById("dashAvgAccuracy");
+  const topScoreEl = document.getElementById("dashTopScore");
+  const historyListEl = document.getElementById("dashHistoryList");
+
+  if (totalTestsEl) totalTestsEl.textContent = history.length;
+  
+  if (history.length > 0) {
+    const avgAcc = Math.round(history.reduce((sum, h) => sum + h.accuracy, 0) / history.length);
+    const topScore = Math.max(...history.map(h => h.score));
+    
+    if (avgAccuracyEl) avgAccuracyEl.textContent = `${avgAcc}%`;
+    if (topScoreEl) topScoreEl.textContent = `${topScore} pts`;
+
+    if (historyListEl) {
+      historyListEl.innerHTML = history.map(h => `
+        <div style="padding:10px 0; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:700; text-transform:capitalize; color:var(--secondary);">${h.category} Test</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">${h.date}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:800; color:var(--primary);">${h.score}/${h.maxScore} pts</div>
+            <div style="font-size:0.75rem; color:var(--success); font-weight:700;">${h.accuracy}% Acc</div>
+          </div>
+        </div>
+      `).join("");
+    }
+  } else {
+    if (avgAccuracyEl) avgAccuracyEl.textContent = "0%";
+    if (topScoreEl) topScoreEl.textContent = "0 pts";
+    if (historyListEl) historyListEl.innerHTML = "<p style='color:var(--text-muted); padding:1rem 0;'>No tests taken yet. Start your assessment!</p>";
+  }
+}
+
 function openCertificateModal() {
+  const engine = appState.analyticsEngine;
+  if (!engine || !appState.user) {
+    alert("Please complete a test first to view your certificate.");
+    return;
+  }
+
   const modal = document.getElementById("certificateModal");
   const certName = document.getElementById("certName");
+  const certDetails = document.getElementById("certDetails");
   const certDate = document.getElementById("certDate");
 
-  if (certName && appState.user) certName.textContent = appState.user.name;
+  if (certName) certName.textContent = appState.user.name;
   if (certDate) certDate.textContent = new Date().toLocaleDateString();
+  if (certDetails) {
+    certDetails.innerHTML = `Has successfully completed the <strong>${appState.selectedCategory.toUpperCase()}</strong> examination with a total score of <strong>${engine.score}/${engine.maxScore} (${engine.accuracyPercent}%)</strong>.`;
+  }
+
   if (modal) modal.classList.add("active");
 }
 
@@ -596,5 +499,9 @@ function printCertificate() {
 
 function escapeHtml(str) {
   if (!str) return '';
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
