@@ -1,0 +1,24 @@
+{
+  "name": "online-mcq-test-analytics",
+  "version": "1.0.0",
+  "description": "Online MCQ Examination & Deep Performance Analytics Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 3000 -c-1",
+    "dev": "npx http-server -p 3000 -c-1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MANOJS0110/OnlineMCQTest-Front-end-.git"
+  },
+  "keywords": [
+    "mcq",
+    "quiz",
+    "analytics",
+    "chartjs",
+    "education",
+    "javascript"
+  ],
+  "author": "Manoj S",
+  "license": "MIT"
+}
