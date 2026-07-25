@@ -8,7 +8,7 @@
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
   
-  <!-- CSS Design System - Professional Blue & White Theme -->
+  <!-- CSS Design System - Royal Blue & Slate White Theme -->
   <link rel="stylesheet" href="css/styles.css" />
   
   <!-- Chart.js CDN for Analytics Visualization -->
@@ -38,7 +38,7 @@
         <div class="auth-header">
           <div style="font-size:2.5rem; margin-bottom:6px;">🎓</div>
           <h2>Student Examination Portal</h2>
-          <p>Sign in to access your technical assessments</p>
+          <p>Sign in to access your 100-question assessment suite</p>
         </div>
 
         <!-- Google Sign-In Button -->
@@ -97,11 +97,11 @@
 
   <!-- ==================== VIEW 2: STUDENT DASHBOARD ==================== -->
   <section id="dashboardView" class="view-section">
-    <div class="card-panel" style="padding: 1.75rem; margin-bottom:1.5rem; background: linear-gradient(135deg, #2563EB, #1E40AF); color:white;">
+    <div class="card-panel" style="padding: 1.75rem; margin-bottom:1.5rem; background: linear-gradient(135deg, #2563EB, #1E3A8A); color:white;">
       <div class="flex-between" style="flex-wrap:wrap; gap:1rem;">
         <div>
           <h2 style="font-family:var(--font-heading); font-size:1.75rem; margin-bottom:4px;">Assessment Center 👋</h2>
-          <p style="opacity:0.9; font-size:0.95rem;">Select an examination subject domain to begin your timed test.</p>
+          <p style="opacity:0.95; font-size:0.95rem;">Select an examination subject domain to begin your timed 25-question test.</p>
         </div>
         <button class="btn btn-secondary" onclick="openEditProfileModal()" style="background:rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4);">
           ✏️ Edit Profile Data
@@ -132,36 +132,36 @@
       <!-- Subject Selection Panel -->
       <div class="card-panel" style="padding: 1.5rem;">
         <h3 style="font-family:var(--font-heading); font-size:1.25rem; color:var(--secondary); margin-bottom:0.4rem;">Select Test Domain</h3>
-        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">Choose a category to launch a timed multiple-choice assessment.</p>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">All subjects contain 25 full questions with detailed explanations.</p>
 
         <div class="subject-grid">
           <div class="subject-card selected" onclick="selectSubjectCategory('fullstack', this)">
             <div class="subj-icon">💻</div>
             <h4>Full-Stack Development</h4>
-            <p>25 Comprehensive Questions: HTML/CSS, JS, React, Node, Express, MongoDB, REST & Security.</p>
+            <p>25 Questions: HTML/CSS, JS, React, Node, Express, MongoDB, REST & Security.</p>
           </div>
 
           <div class="subject-card" onclick="selectSubjectCategory('javascript', this)">
             <div class="subj-icon">⚡</div>
             <h4>JavaScript Core</h4>
-            <p>ES6+, Promises, Event Loop, Closures & Scope.</p>
+            <p>25 Questions: ES6+, Promises, Event Loop, Closures, DOM, Debouncing & Generators.</p>
           </div>
 
           <div class="subject-card" onclick="selectSubjectCategory('dsa', this)">
             <div class="subj-icon">🧩</div>
             <h4>Data Structures & Algorithms</h4>
-            <p>Binary Search, Trees, Graphs, Sorting & Complexity.</p>
+            <p>25 Questions: Binary Search, BST, Graphs, DP, Sorting, Heaps, KMP & Tries.</p>
           </div>
 
           <div class="subject-card" onclick="selectSubjectCategory('backend', this)">
             <div class="subj-icon">🗄️</div>
             <h4>Backend & Databases</h4>
-            <p>NoSQL, SQL, Redis, ACID & HTTP Headers.</p>
+            <p>25 Questions: NoSQL, SQL, Redis, ACID, Indexing, WebSockets & Microservices.</p>
           </div>
         </div>
 
         <button class="btn btn-primary" onclick="startQuiz()" style="margin-top:1.5rem; width:100%; padding:0.95rem; font-size:1.05rem;">
-          Start Examination Now ⏱️
+          Start Assessment (25 Questions) ⏱️
         </button>
       </div>
 
@@ -377,7 +377,7 @@
         Has successfully completed the assessment test with outstanding technical accuracy.
       </p>
 
-      <div style="display:flex; justify-content:space-between; margin-top:2.5rem; padding-top:1rem; border-top:1px solid #E2E8F0; font-size:0.85rem; color:#6B7280;">
+      <div style="display:flex; justify-content:space-between; margin-top:2.5rem; padding-top:1rem; border-top:1px solid #E2E8F0; font-size:0.85rem; color:#64748B;">
         <div>
           <div>Date of Issuance</div>
           <strong id="certDate">2026-07-25</strong>
