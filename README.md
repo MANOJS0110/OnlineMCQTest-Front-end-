@@ -1,5 +1,7 @@
 # Online MCQ Examination & Deep Performance Analytics Platform
 
+# URL : http://localhost:3000/
+
 A modern, full-featured web application for taking online technical multiple-choice tests with real-time timers, auto-save state, question flagging, and comprehensive performance analytics featuring interactive data visualizations.
 
 ![EduTest Analytics](https://img.shields.io/badge/Status-Complete-brightgreen)
